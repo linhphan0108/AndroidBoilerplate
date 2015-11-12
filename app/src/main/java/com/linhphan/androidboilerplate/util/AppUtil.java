@@ -38,8 +38,6 @@ public class AppUtil {
     /**
      * open galleries app
      * if there are many applications are suitable then the OS will open a chooser dialog to pick one
-     * @param context
-     * @param requestCode
      */
     public static void openGalleryApp(Context context, int requestCode) {
         Intent intent = new Intent();
@@ -50,7 +48,6 @@ public class AppUtil {
 
     /**
      * try to retrieve the hash key of an application by package name
-     * @param context
      */
     private void retrieveHashKey(Context context, String packageName) {
         // Add code to print out the key hash

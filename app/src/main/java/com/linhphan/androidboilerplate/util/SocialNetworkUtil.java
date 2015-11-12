@@ -37,9 +37,8 @@ public class SocialNetworkUtil {
 
     /**
      * share an image to facebook
-     * @param context
-     * @param callbackManager
-     * @param uri
+     * @param callbackManager facebook callback manager
+     * @param uri the uri of image
      */
     private void shareToFacebook(Context context, CallbackManager callbackManager, Uri uri) {
         Toast.makeText(context, "start sharing to facebook, " + uri.getPath(), Toast.LENGTH_SHORT).show();
@@ -232,7 +231,6 @@ public class SocialNetworkUtil {
     /**
      * share an image to instagram application
      * note: instagram don't allow sharing text
-     *
      * @param uri which locate the image
      * @see <a href="https://instagram.com/developer/mobile-sharing/android-intents/">Instagram docs</a>
      */

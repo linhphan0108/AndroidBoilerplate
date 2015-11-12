@@ -1,6 +1,10 @@
 package com.linhphan.androidboilerplate.util;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,9 +38,9 @@ public class FileUtil {
 
     /**
      * copy a special file
-     * @param fileName
-     * @param sourceDir
-     * @param DestinationDir
+     * @param fileName the name of file
+     * @param sourceDir the source directory where the file is located
+     * @param DestinationDir the destination directory where the file will be copied to
      * @return the path that locate the new file
      */
     public static String copyFile(String fileName, String sourceDir, String DestinationDir) {
@@ -75,8 +79,8 @@ public class FileUtil {
 
     /**
      * delete a special file in a special directory
-     * @param dir
-     * @param fileName
+     * @param dir the directory where the file is located
+     * @param fileName the name of file
      * @return true if the file was deleted otherwise return false
      */
     public static boolean deleteFile(String dir, String fileName) {
@@ -86,9 +90,9 @@ public class FileUtil {
 
     /**
      * move a file to a special directory
-     * @param fileName
-     * @param sourceDir
-     * @param destinationDir
+     * @param fileName the name of the file
+     * @param sourceDir the directory of source where the source file is located
+     * @param destinationDir  the destination directory where the file will be moved to
      * @return the path that new file is located new destination folder
      */
     public static String moveFile(String fileName, String sourceDir, String destinationDir){
@@ -125,5 +129,23 @@ public class FileUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * try to parse an uri to string path
+     * @param uri the uri which will be parsed
+     * @return the string absolute path
+     */
+    public static String getAbsolutePath(Context context, Uri uri){
+        String result = null;
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            int col = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+            if (col >= 0 && cursor.moveToFirst())
+                result = cursor.getString(col);
+            cursor.close();
+        }
+        return result;
     }
 }

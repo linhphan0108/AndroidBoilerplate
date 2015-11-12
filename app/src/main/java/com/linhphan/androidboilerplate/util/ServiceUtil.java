@@ -11,7 +11,6 @@ public class ServiceUtil {
 
     /**
      * determine whether the special service is running or not
-     * @param context
      * @param serviceClassName the name of service class
      * @return true if the special service is running otherwise return false
      */
