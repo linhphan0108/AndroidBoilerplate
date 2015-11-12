@@ -217,6 +217,21 @@ public class SocialNetworkUtil {
     /**
      * share an image to instagram application
      * note: instagram don't allow sharing text
+     * @param path which locate the image
+     * @see <a href="https://instagram.com/developer/mobile-sharing/android-intents/">Instagram docs</a>
+     */
+    private void shareToInstagram(Context context, String path) {
+        Toast.makeText(context, "start sharing to instagram " + path, Toast.LENGTH_SHORT).show();
+        if (path == null || path.isEmpty()){
+            Toast.makeText(context, "path is empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+       shareToInstagram(context, Uri.parse("file://" + path));
+    }
+
+    /**
+     * share an image to instagram application
+     * note: instagram don't allow sharing text
      *
      * @param uri which locate the image
      * @see <a href="https://instagram.com/developer/mobile-sharing/android-intents/">Instagram docs</a>
