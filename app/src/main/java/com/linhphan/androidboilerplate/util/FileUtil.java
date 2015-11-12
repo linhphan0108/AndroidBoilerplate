@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -52,9 +54,9 @@ public class FileUtil {
             dir.mkdirs();
 
         try {
-            inputStream = new FileInputStream(sourceDir + fileName);
+            inputStream = new BufferedInputStream(new FileInputStream(sourceDir + fileName));
             File file = new File(DestinationDir + fileName);
-            outputStream = new FileOutputStream(file);
+            outputStream = new BufferedOutputStream(new FileOutputStream(file));
 
             byte[] buffer = new byte[1024];
             int read;
@@ -78,17 +80,6 @@ public class FileUtil {
     }
 
     /**
-     * delete a special file in a special directory
-     * @param dir the directory where the file is located
-     * @param fileName the name of file
-     * @return true if the file was deleted otherwise return false
-     */
-    public static boolean deleteFile(String dir, String fileName) {
-        return (new File(dir + fileName)).delete();
-
-    }
-
-    /**
      * move a file to a special directory
      * @param fileName the name of the file
      * @param sourceDir the directory of source where the source file is located
@@ -106,8 +97,8 @@ public class FileUtil {
         try {
             File in = new File(sourceDir + fileName);
             File out = new File(destinationDir + fileName);
-            inputStream = new FileInputStream(in);
-            outputStream = new FileOutputStream(out);
+            inputStream = new BufferedInputStream(new FileInputStream(in));
+            outputStream = new BufferedOutputStream(new FileOutputStream(out));
 
             byte[] buffer = new byte[1024];
             int read;
@@ -129,6 +120,32 @@ public class FileUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * delete a special file in a special directory
+     * @param dir the directory where the file is located
+     * @param fileName the name of file
+     * @return true if the file was deleted otherwise return false
+     */
+    public static boolean deleteFile(String dir, String fileName) {
+        return (new File(dir + fileName)).delete();
+
+    }
+
+    /**
+     * delete a whole folder and it's content
+     * @param fileOrDirectory the directory contains content which will be deleted
+     * @return true if it's content is deleted successfully otherwise return false
+     */
+    public static boolean deleteFile(File fileOrDirectory){
+        if (fileOrDirectory.isDirectory()){
+            for (File child : fileOrDirectory.listFiles()){
+                deleteFile(child);
+            }
+        }
+
+        return fileOrDirectory.delete();
     }
 
     /**

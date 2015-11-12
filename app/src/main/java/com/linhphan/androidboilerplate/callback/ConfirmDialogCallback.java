@@ -1,4 +1,4 @@
-package com.linhphan.androidboilerplate.listener;
+package com.linhphan.androidboilerplate.callback;
 
 /**
  * Created by linhphan on 11/11/15.

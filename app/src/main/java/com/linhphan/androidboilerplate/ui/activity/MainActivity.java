@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.linhphan.androidboilerplate.R;
-import com.linhphan.androidboilerplate.listener.ConfirmDialogCallback;
+import com.linhphan.androidboilerplate.callback.ConfirmDialogCallback;
 import com.linhphan.androidboilerplate.ui.dialog.ConfirmDialog;
 import com.linhphan.androidboilerplate.util.Constant;
 

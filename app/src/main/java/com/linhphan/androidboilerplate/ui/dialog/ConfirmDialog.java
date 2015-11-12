@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import com.linhphan.androidboilerplate.listener.ConfirmDialogCallback;
+import com.linhphan.androidboilerplate.callback.ConfirmDialogCallback;
 import com.linhphan.androidboilerplate.util.Constant;
 
 /**
