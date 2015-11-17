@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by linhphan on 11/13/15.
  */
-public class DumpParser implements JsonParser {
+public class DumpParser implements IParser {
     @Override
     public Object parse(Object data) {
         if (data == null)

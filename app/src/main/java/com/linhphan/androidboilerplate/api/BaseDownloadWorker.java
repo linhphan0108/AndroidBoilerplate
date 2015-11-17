@@ -2,9 +2,9 @@ package com.linhphan.androidboilerplate.api;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;;
+import android.os.AsyncTask;
 
-import com.linhphan.androidboilerplate.api.Parser.JsonParser;
+import com.linhphan.androidboilerplate.api.Parser.IParser;
 import com.linhphan.androidboilerplate.callback.DownloadCallback;
 import com.linhphan.androidboilerplate.util.Logger;
 
@@ -22,49 +22,48 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
- * Created by linhphan on 11/12/15.
+ * Created by linhphan on 11/17/15.
  */
-public class JsonDownloader extends AsyncTask<String, Integer, Object> {
+public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
 
-    private Context mContext;
-    private Method mType = Method.GET;//the method of request whether POST or GET, default value is GET
-    private Map<String, String> mParams;
-    private DownloadCallback mCallback;
-    private JsonParser mParser;
-    private ProgressDialog mProgressbar;
-    private boolean mIsProgressbarHorizontal;
-    private boolean mIsShowProgressbar;
-    private Exception mException;
+    protected Context mContext;
+    protected Method mType = Method.GET;//the method of request whether POST or GET, default value is GET
+    protected Map<String, String> mParams;
+    protected DownloadCallback mCallback;
+    protected IParser mParser;
+    protected ProgressDialog mProgressbar;
+    protected boolean mIsProgressbarHorizontal;
+    protected boolean mIsShowProgressbar;
+    protected Exception mException;
 
-    public JsonDownloader(Context mContext, DownloadCallback mCallback) {
+    public BaseDownloadWorker(Context mContext, DownloadCallback mCallback) {
         this.mContext = mContext;
         this.mCallback = mCallback;
     }
 
-    public JsonDownloader setType(Method type) {
+    public BaseDownloadWorker setType(Method type) {
         this.mType = type;
         return this;
     }
 
-    public JsonDownloader setParams(Map<String, String> params) {
+    public BaseDownloadWorker setParams(Map<String, String> params) {
         this.mParams = params;
         return this;
     }
 
-    public JsonDownloader setParser(JsonParser jsonParser){
+    public BaseDownloadWorker setParser(IParser jsonParser){
         mParser = jsonParser;
         return this;
     }
 
     /**
      * setup the progressbar which will be showed on screen
-     *
      * @param isShow     the progressbar will be showed if this parameter is true, otherwise nothing will be showed
      * @param horizontal if this parameter is true then the progressbar will showed in horizontal style, otherwise the progressbar will be showed in spinner style
-     * @return JsonDownloader object
+     * @return JsonDownloadWorker object
      */
-    public JsonDownloader showProgressbar(boolean isShow, boolean horizontal) {
-        this.mIsShowProgressbar = isShow;
+    public BaseDownloadWorker showProgressbar(boolean isShow, boolean horizontal) {
+        mIsShowProgressbar = isShow;
         this.mIsProgressbarHorizontal = horizontal;
         return this;
     }
@@ -89,41 +88,6 @@ public class JsonDownloader extends AsyncTask<String, Integer, Object> {
             mProgressbar.setCancelable(false);
             mProgressbar.show();
         }
-    }
-
-    @Override
-    protected Object doInBackground(String... params) {
-
-        for (int i = 0; i < 10; i++) {
-            try {
-                Thread.sleep(1000);
-
-                if (mProgressbar != null)
-                    publishProgress(mProgressbar.getProgress() + 10);
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        String url = params[0];
-        String data;
-        try {
-            if (mType == Method.POST) {
-                data = sendPost(url, mParams);
-            } else {
-                data = sendGet(url);
-            }
-            Logger.i(getClass().getName(), "got data from server: " + data);
-            if (mParser != null)
-                return mParser.parse(data);
-            else
-                return data;
-        } catch (IOException e) {
-            e.printStackTrace();
-            mException = e;
-        }
-        return null;
     }
 
     @Override
@@ -152,7 +116,7 @@ public class JsonDownloader extends AsyncTask<String, Integer, Object> {
      * @return data from server which is presented by a string
      * @throws IOException
      */
-    private String sendGet(String path) throws IOException {
+    protected String sendGet(String path) throws IOException {
         String query = null;
         if (mParams != null)
             query = encodeQueryString(mParams);
@@ -190,7 +154,7 @@ public class JsonDownloader extends AsyncTask<String, Integer, Object> {
      * @return data from server which is presented by a string
      * @throws IOException
      */
-    private String sendPost(String path, Map<String, String> params) throws IOException {
+    protected String sendPost(String path, Map<String, String> params) throws IOException {
         URL url = new URL(path);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         String query = encodeQueryString(params);
@@ -267,5 +231,14 @@ public class JsonDownloader extends AsyncTask<String, Integer, Object> {
         }
 
         return builder.toString();
+    }
+
+    protected String getTag() {
+        return getClass().getName();
+    }
+
+    @Override
+    protected Object doInBackground(String... params) {
+        return null;
     }
 }

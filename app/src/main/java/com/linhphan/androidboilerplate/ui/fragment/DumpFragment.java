@@ -1,7 +1,6 @@
 package com.linhphan.androidboilerplate.ui.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
