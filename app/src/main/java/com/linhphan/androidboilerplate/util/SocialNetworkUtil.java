@@ -48,7 +48,7 @@ public class SocialNetworkUtil {
         //com.example.facebook
         //com.facebook.android
         String facebookPackage = "com.facebook.katana";
-        if (AppUtil.isAppInstalled(context, facebookPackage)) {
+        if (AppUtil.getInstance().isAppInstalled(context, facebookPackage)) {
             //using default intent
 //            Intent intent = new Intent(Intent.ACTION_SEND);
 //            intent.setType("image/*");
@@ -173,7 +173,7 @@ public class SocialNetworkUtil {
     private void shareToTwitter(Context context, Uri uri) {
         Toast.makeText(context, "start sharing to twitter " + uri.getPath(), Toast.LENGTH_SHORT).show();
         String twitterPackage = "com.twitter.android";
-        if (AppUtil.isAppInstalled(context, twitterPackage)) {
+        if (AppUtil.getInstance().isAppInstalled(context, twitterPackage)) {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             intent.putExtra(Intent.EXTRA_TEXT, "the simple text");
@@ -244,7 +244,7 @@ public class SocialNetworkUtil {
 
         Toast.makeText(context, "start sharing to instagram " + uri.getPath(), Toast.LENGTH_SHORT).show();
         String instagramPackage = "com.instagram.android";
-        if (AppUtil.isAppInstalled(context, instagramPackage)) {
+        if (AppUtil.getInstance().isAppInstalled(context, instagramPackage)) {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("image/*");
             intent.putExtra(Intent.EXTRA_STREAM, uri);
