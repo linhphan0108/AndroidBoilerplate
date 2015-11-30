@@ -18,4 +18,16 @@ public class NetworkUtil {
         NetworkInfo info = manager.getActiveNetworkInfo();
         return info != null && info.isConnectedOrConnecting();
     }
+
+    public static boolean isWifiConnected(Context context){
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        return info != null && info.isConnectedOrConnecting() && info.getType() == ConnectivityManager.TYPE_WIFI;
+    }
+
+    public static boolean isBlueToothConnected(Context context){
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        return info != null && info.isConnectedOrConnecting() && info.getType() == ConnectivityManager.TYPE_BLUETOOTH;
+    }
 }
