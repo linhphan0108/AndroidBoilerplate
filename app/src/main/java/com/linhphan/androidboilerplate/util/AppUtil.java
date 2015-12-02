@@ -1,6 +1,7 @@
 package com.linhphan.androidboilerplate.util;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -14,6 +15,7 @@ import android.util.Log;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /**
  * Created by linhphan on 11/11/15.
@@ -121,5 +123,37 @@ public class AppUtil {
         AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int currentVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
         am.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_SHOW_UI);
+    }
+
+
+    /**
+     * determine whether the special service is running or not
+     * @param serviceClassName the name of service class
+     * @return true if the special service is running otherwise return false
+     */
+    public static boolean isServiceRunning(Context context, Class serviceClassName){
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if (service.getClass().getName().equals(serviceClassName))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * determine whether the given activity is running or not
+     * this feature must request android.permission.GET_TASKS permission
+     * @param activityClass the class which will be determined
+     * @return true if there has any instances of the given class is running, otherwise return false
+     */
+    public boolean isActivityRunning(Context context, Class activityClass){
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> runningTaskInfoList = activityManager.getRunningTasks(Integer.MAX_VALUE);
+        for (ActivityManager.RunningTaskInfo info : runningTaskInfoList){
+            if (activityClass.getCanonicalName().equalsIgnoreCase(info.baseActivity.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
