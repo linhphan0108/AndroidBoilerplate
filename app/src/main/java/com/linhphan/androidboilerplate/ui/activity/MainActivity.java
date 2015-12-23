@@ -12,7 +12,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         mContainerResource = R.id.fr_container;
 
@@ -22,50 +21,25 @@ public class MainActivity extends BaseActivity {
         bundle.putInt(BaseFragment.ARGUMENT_KEY, 1);
         message.obj = BaseFragment.newInstance(DumpFragment.class, bundle);
         mBaseHandler.sendMessage(message);
+    }
 
+    @Override
+    protected int getActivityLayoutResource() {
+        return R.layout.activity_main;
+    }
 
+    @Override
+    protected void init() {
 
+    }
 
-//        ConfirmDialog dialog = new ConfirmDialog();
-//        dialog.registerCallback(new ConfirmDialogCallback() {
-//            @Override
-//            public void onOk() {
-//                Toast.makeText(MainActivity.this, "ok is clicked", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        Bundle bundle = new Bundle();
-//        bundle.putString(Constant.DIALOG_TITLE, "the title here");
-//        bundle.putString(Constant.DIALOG_MESSAGE, "the message here");
-//        dialog.setArguments(bundle);
-//        dialog.show(getSupportFragmentManager(), ConfirmDialog.class.getSimpleName());
+    @Override
+    protected void getWidgets() {
 
+    }
 
+    @Override
+    protected void registerEventHandler() {
 
-//        Map<String, String> query = new HashMap<>();
-//        query.put("name", "linh");
-//        query.put("title", "developer");
-//        query.put("age", "26");
-//
-//        JsonDownloader jsonDownloader = new JsonDownloader(this, new DownloadCallback() {
-//            @Override
-//            public void onDownloadSuccessfully(Object data) {
-//                if (data instanceof ArrayList){
-//                    @SuppressWarnings("unchecked")
-//                    ArrayList<DumpModel> list = (ArrayList<DumpModel>) data;
-//                    Toast.makeText(getBaseContext(), "data length "+ list.size(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onDownloadFailed(Exception e) {
-//
-//            }
-//        });
-//
-//        jsonDownloader.showProgressbar(true, true)
-////                .setType(Method.POST)
-//                .setParams(query)
-//                .setParser(new DumpParser())
-//                .execute("https://ota.dev.vc/merries/banner/banner.json");
     }
 }

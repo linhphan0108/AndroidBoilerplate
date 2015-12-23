@@ -21,31 +21,15 @@ public class DumpFragment extends BaseFragment implements View.OnClickListener {
     Button mBtnNewFragment;
 
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View view = View.inflate(container.getContext(), R.layout.fragment_blank, null);
-        mTxtContent = (TextView) view.findViewById(R.id.txt_content);
-        mBtnNewFragment = (Button) view.findViewById(R.id.btn_new_Fragment);
-        mBtnNewFragment.setOnClickListener(this);
-
-
-        Bundle bundle = getArguments();
-        if (bundle != null){
-            int number = bundle.getInt(ARGUMENT_KEY, 0);
-            String content = "the content of fragment " + number;
-            mTxtContent.setText(content);
-        }
-
-        return view;
-    }
+    //================ overridden methods ==========================================================
 
     @Override
     public void onStart() {
         super.onStart();
     }
 
+
+    //================ implemented methods =========================================================
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -69,4 +53,36 @@ public class DumpFragment extends BaseFragment implements View.OnClickListener {
                 break;
         }
     }
+
+    @Override
+    protected int getFragmentLayoutResource() {
+        return R.layout.fragment_blank;
+    }
+
+    @Override
+    protected void init() {
+
+    }
+
+    @Override
+    protected void getWidgets(View root) {
+        mTxtContent = (TextView) root.findViewById(R.id.txt_content);
+        mBtnNewFragment = (Button) root.findViewById(R.id.btn_new_Fragment);
+        mBtnNewFragment.setOnClickListener(this);
+
+
+        Bundle bundle = getArguments();
+        if (bundle != null){
+            int number = bundle.getInt(ARGUMENT_KEY, 0);
+            String content = "the content of fragment " + number;
+            mTxtContent.setText(content);
+        }
+    }
+
+    @Override
+    protected void registerEventHandler() {
+
+    }
+
+    //================ others ======================================================================
 }
