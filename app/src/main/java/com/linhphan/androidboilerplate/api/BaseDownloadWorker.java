@@ -48,6 +48,7 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     //exception
     protected Exception mException;
 
+    //================== constructors ==============================================================
     /**
      * constructs an AsyncTask download worker. this will initialize a progress bar dialog with a STYLE_SPINNER if isShowDialog is set true
      * @param isShowDialog if this argument is set true, then a dialog will be showed when this download worker is working.
@@ -65,6 +66,28 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
         }
     }
 
+    //================= setters and getters ========================================================
+    public BaseDownloadWorker setRequestCode(int requestCode){
+        this.mRequestCode = requestCode;
+        return this;
+    }
+
+    public BaseDownloadWorker setType(Method type) {
+        this.mType = type;
+        return this;
+    }
+
+    public BaseDownloadWorker setParams(Map<String, String> params) {
+        this.mParams = params;
+        return this;
+    }
+
+    public BaseDownloadWorker setParser(IParser jsonParser) {
+        mParser = jsonParser;
+        return this;
+    }
+
+    //================== overridden methods ========================================================
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -79,6 +102,9 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
         }
     }
 
+    /**
+     *this method should be overridden in it's sub classes
+     */
     @Override
     protected Object doInBackground(String... params) {
         return null;
@@ -105,26 +131,21 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
             mProgressbar.setProgress(values[0]);
     }
 
-    public BaseDownloadWorker setRequestCode(int requestCode){
-        this.mRequestCode = requestCode;
-        return this;
+    @Override
+    protected void onCancelled(Object o) {
+        if (mProgressbar != null && mProgressbar.isShowing())
+            mProgressbar.dismiss();
+        super.onCancelled(o);
     }
 
-    public BaseDownloadWorker setType(Method type) {
-        this.mType = type;
-        return this;
+    @Override
+    protected void onCancelled() {
+        if (mProgressbar != null && mProgressbar.isShowing())
+            mProgressbar.dismiss();
+        super.onCancelled();
     }
 
-    public BaseDownloadWorker setParams(Map<String, String> params) {
-        this.mParams = params;
-        return this;
-    }
-
-    public BaseDownloadWorker setParser(IParser jsonParser) {
-        mParser = jsonParser;
-        return this;
-    }
-
+    //================== others methods ============================================================
     /**
      * the progressbar will be cancelable when user touches anywhere outside the dialog if this method is called.
      * default is false.

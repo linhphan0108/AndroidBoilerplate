@@ -1,5 +1,6 @@
 package com.linhphan.androidboilerplate.ui.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import com.linhphan.androidboilerplate.ui.activity.BaseActivity;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Time;
 
 /**
  * Created by linhphan on 11/13/15.
@@ -89,6 +91,11 @@ public abstract class BaseFragment extends Fragment {
      * register event listeners fro views
      */
     protected abstract void registerEventHandler();
+
+    @SuppressWarnings("unchecked")
+    protected  <T extends BaseActivity>T getOwnerActivity(){
+        return (T) getActivity();
+    }
 
     //================== others ====================================================================
     public static boolean isFragmentVisisble(int id, FragmentManager manager){
