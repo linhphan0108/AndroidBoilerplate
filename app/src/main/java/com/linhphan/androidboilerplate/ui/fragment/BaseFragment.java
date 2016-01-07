@@ -1,6 +1,5 @@
 package com.linhphan.androidboilerplate.ui.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,7 +14,6 @@ import com.linhphan.androidboilerplate.ui.activity.BaseActivity;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Time;
 
 /**
  * Created by linhphan on 11/13/15.
@@ -68,8 +66,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        BaseActivity baseActivity = (BaseActivity) context;
-        mBaseHandler = baseActivity.getBaseHandler();
     }
 
     //================== abstract methods ==========================================================
@@ -92,9 +88,17 @@ public abstract class BaseFragment extends Fragment {
      */
     protected abstract void registerEventHandler();
 
+    public String getClassTagName(){
+        return this.getClass().getName();
+    }
+
     @SuppressWarnings("unchecked")
     protected  <T extends BaseActivity>T getOwnerActivity(){
         return (T) getActivity();
+    }
+
+    protected BaseActivity getBaseActivity(){
+        return (BaseActivity) getActivity();
     }
 
     //================== others ====================================================================

@@ -1,7 +1,7 @@
 package com.linhphan.androidboilerplate.ui.activity;
 
-import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 
 import com.linhphan.androidboilerplate.R;
 import com.linhphan.androidboilerplate.api.JsonDownloadWorker;
@@ -21,48 +21,32 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mContainerResource = R.id.fr_container;
-
-        Message message = mBaseHandler.obtainMessage();
-        message.what = BaseActivity.REPLACING_FRAGMENT;
         Bundle bundle = new Bundle();
         bundle.putInt(BaseFragment.ARGUMENT_KEY, 1);
-        message.obj = BaseFragment.newInstance(DumpFragment.class, bundle);
-        mBaseHandler.sendMessage(message);
+        BaseFragment fragment = BaseFragment.newInstance(DumpFragment.class, bundle);
+        FragmentTransaction transaction = getFragmentTransaction(R.anim.animation_sliding_in_right_left, R.anim.no_sliding, 0, 0);
+        replaceFragment(R.id.fr_container, fragment, false, transaction);
 
+        //// Server
+        JsonDownloadWorker worker = new JsonDownloadWorker(this, true, new DownloadCallback() {
+            @Override
+            public void onDownloadSuccessfully(Object data, int requestCode) {
+                switch (requestCode){
+                    case 999 :
+                        break;
 
+                    case 1000:
 
-
-    }
-
-
-
-    //// Server
-
-    JsonDownloadWorker worker = new JsonDownloadWorker(this, true, new DownloadCallback() {
-        @Override
-        public void onDownloadSuccessfully(Object data, int requestCode) {
-            switch (requestCode){
-                case 999 :
-                    worker.cancel(true);
-                    request_02();
-                    break;
-
-                case 1000:
-
-                    break;
+                        break;
+                }
             }
-        }
 
-        @Override
-        public void onDownloadFailed(Exception e, int requestCode) {
+            @Override
+            public void onDownloadFailed(Exception e, int requestCode) {
 
-        }
-    });
+            }
+        });
 
-
-
-    void request_01(){
         String url = "http://dev.bravesoft.vn/FoodCoach/API/user_login.json";
         Map<String, String> params = new HashMap<>();
         params.put("device_token", "abc");
@@ -75,22 +59,6 @@ public class MainActivity extends BaseActivity {
                 .setParams(params)
                 .execute(url);
     }
-
-
-    void request_02(){
-        String url = "http://dev.bravesoft.vn/FoodCoach/API/user_login2.json";
-        Map<String, String> params = new HashMap<>();
-        params.put("device_token", "abc");
-        params.put("username", "user_1");
-        params.put("password", "123456");
-
-        worker.setType(Method.POST)
-                .setRequestCode(1999)
-                .setParser(new JsonParser())
-                .setParams(params)
-                .execute(url);
-    }
-
 
 
 

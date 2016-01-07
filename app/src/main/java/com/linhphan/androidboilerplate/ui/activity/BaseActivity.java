@@ -3,28 +3,25 @@ package com.linhphan.androidboilerplate.ui.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.linhphan.androidboilerplate.R;
+import com.linhphan.androidboilerplate.ui.fragment.BaseFragment;
 import com.linhphan.androidboilerplate.util.Logger;
 
 /**
  * Created by linhphan on 11/13/15.
  */
-public abstract class BaseActivity extends AppCompatActivity implements Handler.Callback{
+public abstract class BaseActivity extends AppCompatActivity{
 
-    public final static int REPLACING_FRAGMENT = 11;
 
-    protected Handler mBaseHandler = new Handler(this);
-    protected int mContainerResource;//the id if the fragment container
+//    protected Handler mBaseHandler = new Handler(this);
+//    protected int mContainerResource;//the id if the fragment container
 
     //==================== setters and getters =====================================================
-    public Handler getBaseHandler() {
-        return mBaseHandler;
-    }
+
 
     //==================== overridden methods ======================================================
 
@@ -77,35 +74,24 @@ public abstract class BaseActivity extends AppCompatActivity implements Handler.
      */
     protected abstract void registerEventHandler();
 
-    //===================== others =================================================================s
+    //===================== fragment management ====================================================
 
-    //handle message from handler
-    @Override
-    public boolean handleMessage(Message msg) {
-
-        switch (msg.what){
-            case REPLACING_FRAGMENT:
-                replaceFragment(mContainerResource, (Fragment) msg.obj);
-                break;
-        }
-
-        return false;
-    }
-
-    private void replaceFragment(int container, Fragment fragment){
-        if (container == 0 || fragment == null){
+    public void replaceFragment(int containerLayoutId, BaseFragment fragment, boolean isAddBackStack, FragmentTransaction transaction){
+        if (containerLayoutId == 0 || fragment == null){
             Logger.e(getClass().getName(), "container was null or fragment was null");
             return;
         }
-        FragmentTransaction fragmentTransaction = getFragmentTransaction();
-        fragmentTransaction.replace(container, fragment);
-        fragmentTransaction.commit();
+        transaction.replace(containerLayoutId, fragment, fragment.getClassTagName());
+        if (isAddBackStack) {
+            transaction.addToBackStack(fragment.getClassTagName());
+        }
+        transaction.commit();
     }
 
     /**
      * pop the latest fragment in manager's fragment back stack.
      */
-    private void popFragment(){
+    public void popFragment(){
         FragmentManager manager = getSupportFragmentManager();
         manager.popBackStack();
     }
@@ -114,20 +100,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Handler.
      * pop the fragment by id
      * @param id which was returned from commit call
      */
-    private void popFragment(int id){
+    public void popFragment(int id){
         FragmentManager manager = getSupportFragmentManager();
         manager.popBackStack(id, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    }
-
-    /**
-     * get an instant of FragmentTransaction which was setup an custom sliding animation
-     * @return FragmentTransaction object
-     */
-    protected FragmentTransaction getFragmentTransaction(){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.animation_sliding_in_right_left, R.anim.no_sliding);
-        return fragmentTransaction;
     }
 
     /**
@@ -138,7 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Handler.
      * @param popExit the animation resource fro popped exit screen
      * @return FragmentTransaction object
      */
-    protected FragmentTransaction getFragmentTransaction(int enter, int exit, int popEnter, int popExit){
+    public FragmentTransaction getFragmentTransaction(int enter, int exit, int popEnter, int popExit){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);

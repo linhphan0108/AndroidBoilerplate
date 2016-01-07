@@ -2,10 +2,8 @@ package com.linhphan.androidboilerplate.ui.fragment;
 
 import android.os.Bundle;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -34,22 +32,17 @@ public class DumpFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_new_Fragment:
-                try {
-                    Message message = mBaseHandler.obtainMessage();
-                    message.what = BaseActivity.REPLACING_FRAGMENT;
-                    Bundle bundle = getArguments();
-                    if (bundle == null){
-                        bundle = new Bundle();
-                        bundle.putInt(BaseFragment.ARGUMENT_KEY, 1);
-                    }else{
-                        int number = bundle.getInt(BaseFragment.ARGUMENT_KEY, 0);
-                        bundle.putInt(BaseFragment.ARGUMENT_KEY, number + 1);
-                    }
-                    message.obj = BaseFragment.newInstance(DumpFragment.class, bundle);
-                    mBaseHandler.sendMessage(message);
-                }catch (ClassCastException e){
-                    e.printStackTrace();
-                }
+
+                Bundle bundle = getArguments();
+                int number = bundle.getInt(BaseFragment.ARGUMENT_KEY, 0);
+
+                bundle.putInt(BaseFragment.ARGUMENT_KEY, number +1);
+
+                BaseActivity baseFragment = getOwnerActivity();
+
+                BaseFragment fragment = BaseFragment.newInstance(DumpFragment.class, bundle);
+                FragmentTransaction transaction = baseFragment.getFragmentTransaction(R.anim.animation_sliding_in_right_left, R.anim.no_sliding, 0, 0);
+                baseFragment.replaceFragment(R.id.fr_container, fragment, false, transaction);
                 break;
         }
     }
