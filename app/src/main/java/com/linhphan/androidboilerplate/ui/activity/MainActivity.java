@@ -24,7 +24,7 @@ public class MainActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putInt(BaseFragment.ARGUMENT_KEY, 1);
         BaseFragment fragment = BaseFragment.newInstance(DumpFragment.class, bundle);
-        FragmentTransaction transaction = getFragmentTransaction(R.anim.animation_sliding_in_right_left, R.anim.no_sliding, 0, 0);
+        FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, R.anim.no_sliding, 0, 0);
         replaceFragment(R.id.fr_container, fragment, false, transaction);
 
         //// Server

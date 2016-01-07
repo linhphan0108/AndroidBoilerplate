@@ -1,10 +1,12 @@
 package com.linhphan.androidboilerplate.ui.fragment;
 
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.linhphan.androidboilerplate.R;
@@ -15,8 +17,13 @@ import com.linhphan.androidboilerplate.ui.activity.BaseActivity;
  */
 public class DumpFragment extends BaseFragment implements View.OnClickListener {
 
-    TextView mTxtContent;
-    Button mBtnNewFragment;
+    private TextView mTxtContent;
+    private ImageView mImg;
+    private Button mBtnNewFragment;
+    private Button mBtnRotation;
+    private Button mBtnMove;
+    private Button mBtnZoom;
+    private Button mBtnFadeIn;
 
 
     //================ overridden methods ==========================================================
@@ -41,8 +48,27 @@ public class DumpFragment extends BaseFragment implements View.OnClickListener {
                 BaseActivity baseFragment = getOwnerActivity();
 
                 BaseFragment fragment = BaseFragment.newInstance(DumpFragment.class, bundle);
-                FragmentTransaction transaction = baseFragment.getFragmentTransaction(R.anim.animation_sliding_in_right_left, R.anim.no_sliding, 0, 0);
+                FragmentTransaction transaction = baseFragment.getFragmentTransaction(R.anim.sliding_enter_right_left, R.anim.no_sliding, 0, 0);
                 baseFragment.replaceFragment(R.id.fr_container, fragment, false, transaction);
+                break;
+
+            case R.id.btn_rotation:
+                animateRotation();
+                break;
+
+            case R.id.btn_move:
+                animateMovement();
+                break;
+
+            case R.id.btn_zoom:
+                animateZoom();
+                break;
+
+            case R.id.btn_fade_in:
+                animateFadeIn();
+                break;
+
+            default:
                 break;
         }
     }
@@ -60,8 +86,12 @@ public class DumpFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected void getWidgets(View root) {
         mTxtContent = (TextView) root.findViewById(R.id.txt_content);
+        mImg = (ImageView) root.findViewById(R.id.img);
         mBtnNewFragment = (Button) root.findViewById(R.id.btn_new_Fragment);
-        mBtnNewFragment.setOnClickListener(this);
+        mBtnRotation = (Button) root.findViewById(R.id.btn_rotation);
+        mBtnMove = (Button) root.findViewById(R.id.btn_move);
+        mBtnZoom = (Button) root.findViewById(R.id.btn_zoom);
+        mBtnFadeIn = (Button) root.findViewById(R.id.btn_fade_in);
 
 
         Bundle bundle = getArguments();
@@ -74,8 +104,32 @@ public class DumpFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     protected void registerEventHandler() {
-
+        mBtnNewFragment.setOnClickListener(this);
+        mBtnRotation.setOnClickListener(this);
+        mBtnMove.setOnClickListener(this);
+        mBtnZoom.setOnClickListener(this);
+        mBtnFadeIn.setOnClickListener(this);
     }
 
-    //================ others ======================================================================
+    //================ other methods ================================================================
+
+    private void animateRotation(){
+        Animation rotation = AnimationUtils.loadAnimation(getContext(), R.anim.rotation);
+        mImg.startAnimation(rotation);
+    }
+
+    private void animateMovement(){
+        Animation rotation = AnimationUtils.loadAnimation(getContext(), R.anim.move);
+        mImg.startAnimation(rotation);
+    }
+
+    private void animateZoom(){
+        Animation rotation = AnimationUtils.loadAnimation(getContext(), R.anim.zoom);
+        mImg.startAnimation(rotation);
+    }
+
+    private void animateFadeIn(){
+        Animation rotation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        mImg.startAnimation(rotation);
+    }
 }

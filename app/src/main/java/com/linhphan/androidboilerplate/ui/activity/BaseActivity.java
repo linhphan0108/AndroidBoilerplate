@@ -1,8 +1,6 @@
 package com.linhphan.androidboilerplate.ui.activity;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -46,7 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity{
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.no_sliding, R.anim.animation_sliding_down);
+        overridePendingTransition(R.anim.no_sliding, R.anim.sliding_exit_down);
     }
 
     //==================== implemented methods =====================================================
