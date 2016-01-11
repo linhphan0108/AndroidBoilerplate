@@ -20,8 +20,6 @@ import java.lang.reflect.InvocationTargetException;
  */
 public abstract class BaseFragment extends Fragment {
 
-    public static final String ARGUMENT_KEY =  "ARGUMENT_KEY";
-
     public static BaseFragment newInstance(Class<?> c, Bundle bundle){
         BaseFragment baseFragment = null;
         try {

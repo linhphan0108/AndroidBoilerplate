@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.linhphan.androidboilerplate.R;
 import com.linhphan.androidboilerplate.ui.fragment.BaseFragment;
+import com.linhphan.androidboilerplate.ui.fragment.DumpFragment;
 import com.linhphan.androidboilerplate.util.Logger;
 
 /**
@@ -68,7 +69,8 @@ public abstract class BaseActivity extends AppCompatActivity{
 
     //===================== fragment management ====================================================
 
-    public void replaceFragment(int containerLayoutId, BaseFragment fragment, boolean isAddBackStack, FragmentTransaction transaction){
+    public void replaceFragment(int containerLayoutId, Class<?> fragmentClass, Bundle data, boolean isAddBackStack, FragmentTransaction transaction){
+        BaseFragment fragment = BaseFragment.newInstance(fragmentClass, data);
         if (containerLayoutId == 0 || fragment == null){
             Logger.e(getClass().getName(), "container was null or fragment was null");
             return;

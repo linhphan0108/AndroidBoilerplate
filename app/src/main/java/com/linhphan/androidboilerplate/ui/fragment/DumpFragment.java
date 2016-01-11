@@ -17,9 +17,10 @@ import com.linhphan.androidboilerplate.ui.activity.BaseActivity;
  */
 public class DumpFragment extends BaseFragment implements View.OnClickListener {
 
+    public static final String ARGUMENT_KEY =  "ARGUMENT_KEY";
+
     private TextView mTxtContent;
     private ImageView mImg;
-    private Button mBtnNewFragment;
     private Button mBtnRotation;
     private Button mBtnMove;
     private Button mBtnZoom;
@@ -38,19 +39,6 @@ public class DumpFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btn_new_Fragment:
-
-                Bundle bundle = getArguments();
-                int number = bundle.getInt(BaseFragment.ARGUMENT_KEY, 0);
-
-                bundle.putInt(BaseFragment.ARGUMENT_KEY, number +1);
-
-                BaseActivity baseFragment = getOwnerActivity();
-
-                BaseFragment fragment = BaseFragment.newInstance(DumpFragment.class, bundle);
-                FragmentTransaction transaction = baseFragment.getFragmentTransaction(R.anim.sliding_enter_right_left, R.anim.no_sliding, 0, 0);
-                baseFragment.replaceFragment(R.id.fr_container, fragment, false, transaction);
-                break;
 
             case R.id.btn_rotation:
                 animateRotation();
@@ -87,7 +75,6 @@ public class DumpFragment extends BaseFragment implements View.OnClickListener {
     protected void getWidgets(View root) {
         mTxtContent = (TextView) root.findViewById(R.id.txt_content);
         mImg = (ImageView) root.findViewById(R.id.img);
-        mBtnNewFragment = (Button) root.findViewById(R.id.btn_new_Fragment);
         mBtnRotation = (Button) root.findViewById(R.id.btn_rotation);
         mBtnMove = (Button) root.findViewById(R.id.btn_move);
         mBtnZoom = (Button) root.findViewById(R.id.btn_zoom);
@@ -104,7 +91,6 @@ public class DumpFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     protected void registerEventHandler() {
-        mBtnNewFragment.setOnClickListener(this);
         mBtnRotation.setOnClickListener(this);
         mBtnMove.setOnClickListener(this);
         mBtnZoom.setOnClickListener(this);

@@ -2,30 +2,37 @@ package com.linhphan.androidboilerplate.ui.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
+import android.widget.Button;
 
 import com.linhphan.androidboilerplate.R;
 import com.linhphan.androidboilerplate.api.JsonDownloadWorker;
 import com.linhphan.androidboilerplate.api.Method;
 import com.linhphan.androidboilerplate.api.Parser.IParser;
 import com.linhphan.androidboilerplate.callback.DownloadCallback;
-import com.linhphan.androidboilerplate.ui.fragment.BaseFragment;
+import com.linhphan.androidboilerplate.ui.fragment.AnimationFragment;
 import com.linhphan.androidboilerplate.ui.fragment.DumpFragment;
 import com.linhphan.androidboilerplate.util.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends BaseActivity {
 
+public class MainActivity extends BaseActivity implements View.OnClickListener {
+
+    private Button mBtnNewFragment;
+
+    private int mAutoIncreaseNumber = 0;
+
+    //=============== overridden methods ===========================================================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = new Bundle();
-        bundle.putInt(BaseFragment.ARGUMENT_KEY, 1);
-        BaseFragment fragment = BaseFragment.newInstance(DumpFragment.class, bundle);
+        bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
         FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, R.anim.no_sliding, 0, 0);
-        replaceFragment(R.id.fr_container, fragment, false, transaction);
+        replaceFragment(R.id.fr_container, DumpFragment.class, bundle, false, transaction);
 
         //// Server
         JsonDownloadWorker worker = new JsonDownloadWorker(this, true, new DownloadCallback() {
@@ -74,14 +81,41 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void getWidgets() {
-
+        mBtnNewFragment = (Button) findViewById(R.id.btn_new_Fragment);
     }
 
     @Override
     protected void registerEventHandler() {
-
+        mBtnNewFragment.setOnClickListener(this);
     }
 
+    //=============== implemented methods ==========================================================
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_new_Fragment:
+
+                mAutoIncreaseNumber++;
+                if (mAutoIncreaseNumber % 2 == 0) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
+                    FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, R.anim.no_sliding, 0, 0);
+                    replaceFragment(R.id.fr_container, DumpFragment.class, bundle, false, transaction);
+
+                }else if (mAutoIncreaseNumber % 2 == 1){
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
+                    FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, R.anim.no_sliding, 0, 0);
+                    replaceFragment(R.id.fr_container, AnimationFragment.class, bundle, false, transaction);
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    //=============== inner classes ================================================================
     class JsonParser implements IParser{
 
         @Override
