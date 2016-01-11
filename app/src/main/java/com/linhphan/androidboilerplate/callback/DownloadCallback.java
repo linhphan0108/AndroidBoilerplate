@@ -6,6 +6,6 @@ package com.linhphan.androidboilerplate.callback;
 public interface DownloadCallback {
     int UNKNOWN_REQUEST_CODE = 1000;
 
-    void onDownloadSuccessfully(Object data, int requestCode);
-    void onDownloadFailed(Exception e, int requestCode);
+    void onSuccessfully(Object data, int requestCode);
+    void onFailed(Exception e, int requestCode);
 }

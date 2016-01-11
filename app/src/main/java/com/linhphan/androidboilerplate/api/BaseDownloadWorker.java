@@ -115,9 +115,9 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
         if (mException == null)
-            mCallback.onDownloadSuccessfully(o, mRequestCode);
+            mCallback.onSuccessfully(o, mRequestCode);
         else {
-            mCallback.onDownloadFailed(mException, mRequestCode);
+            mCallback.onFailed(mException, mRequestCode);
         }
         if (mProgressbar != null && mProgressbar.isShowing())
             mProgressbar.dismiss();

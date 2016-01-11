@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity {
         //// Server
         JsonDownloadWorker worker = new JsonDownloadWorker(this, true, new DownloadCallback() {
             @Override
-            public void onDownloadSuccessfully(Object data, int requestCode) {
+            public void onSuccessfully(Object data, int requestCode) {
                 switch (requestCode){
                     case 999 :
                         break;
@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity {
             }
 
             @Override
-            public void onDownloadFailed(Exception e, int requestCode) {
+            public void onFailed(Exception e, int requestCode) {
 
             }
         });

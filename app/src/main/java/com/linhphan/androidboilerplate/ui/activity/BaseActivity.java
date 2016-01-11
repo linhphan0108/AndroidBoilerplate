@@ -14,16 +14,10 @@ import com.linhphan.androidboilerplate.util.Logger;
  */
 public abstract class BaseActivity extends AppCompatActivity{
 
-
-//    protected Handler mBaseHandler = new Handler(this);
-//    protected int mContainerResource;//the id if the fragment container
-
     //==================== setters and getters =====================================================
 
 
     //==================== overridden methods ======================================================
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

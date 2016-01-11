@@ -22,8 +22,6 @@ public abstract class BaseFragment extends Fragment {
 
     public static final String ARGUMENT_KEY =  "ARGUMENT_KEY";
 
-    protected Handler mBaseHandler;//this handler will be gotten from an activity which this fragment is attached
-
     public static BaseFragment newInstance(Class<?> c, Bundle bundle){
         BaseFragment baseFragment = null;
         try {
@@ -75,6 +73,7 @@ public abstract class BaseFragment extends Fragment {
     protected abstract int getFragmentLayoutResource();
     /**
      * initialize default value for valuables here
+     * this method will be called in onCreate method of Fragment.
      */
     protected abstract void init();
 
