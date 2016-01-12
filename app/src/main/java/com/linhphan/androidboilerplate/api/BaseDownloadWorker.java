@@ -10,10 +10,8 @@ import android.support.v4.app.NotificationCompat;
 
 import com.linhphan.androidboilerplate.R;
 import com.linhphan.androidboilerplate.api.Parser.IParser;
-import com.linhphan.androidboilerplate.callback.DownloadCallback;
 import com.linhphan.androidboilerplate.util.Logger;
 import com.linhphan.androidboilerplate.util.NetworkUtil;
-import com.linhphan.androidboilerplate.util.NoInternetConnectionException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -40,7 +38,8 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     protected IParser mParser;
 
     private DownloadCallback mCallback;
-    private int mRequestCode = DownloadCallback.UNKNOWN_REQUEST_CODE;
+    private int mRequestCode = DownloadCallback.UNKNOWN_CODE;
+    protected ResponseCodeHolder mResponseCode = new ResponseCodeHolder();
 
     //progress dialog
     protected ProgressDialog mProgressbar;
@@ -115,9 +114,9 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
         if (mException == null)
-            mCallback.onSuccessfully(o, mRequestCode);
+            mCallback.onSuccessfully(o, mRequestCode, mResponseCode.getValue());
         else {
-            mCallback.onFailed(mException, mRequestCode);
+            mCallback.onFailed(mException, mRequestCode, mResponseCode.getValue());
         }
         if (mProgressbar != null && mProgressbar.isShowing())
             mProgressbar.dismiss();
@@ -145,7 +144,7 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
         super.onCancelled();
     }
 
-    //================== others methods ============================================================
+    //================== other methods =============================================================
     /**
      * the progressbar will be cancelable when user touches anywhere outside the dialog if this method is called.
      * default is false.
@@ -339,5 +338,45 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
 
     protected String getTag() {
         return getClass().getName();
+    }
+
+    //=========== inner classes ====================================================================
+    /**
+     * this class will be used to instance an object which is passed to an parser as a parameter to get the response code from server.
+     */
+    public class ResponseCodeHolder {
+        private int value = DownloadCallback.UNKNOWN_CODE;
+
+        public ResponseCodeHolder() {
+        }
+
+        public ResponseCodeHolder(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+    }
+
+    public interface DownloadCallback {
+        public static final int UNKNOWN_CODE = 1000;
+        public static final int RESPONSE_CODE_SUCCESSFULLY = 10000;
+        public static final int RESPONSE_Code_UNKNOWN_REQUEST = 11000;
+        public static final int RESPONSE_CODE_MISSING_PARAMS = 12000;
+
+        void onSuccessfully(Object data, int requestCode, int responseCode);
+        void onFailed(Exception e, int requestCode, int responseCode);
+    }
+
+    public class NoInternetConnectionException extends Exception {
+        @Override
+        public String getMessage() {
+            return "No internet connection available";
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.linhphan.androidboilerplate.ui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -50,6 +51,7 @@ public abstract class BaseActivity extends AppCompatActivity{
     /**
      * @return the layout resource id
      */
+    @LayoutRes
     protected abstract int getActivityLayoutResource();
 
     /**
@@ -68,7 +70,6 @@ public abstract class BaseActivity extends AppCompatActivity{
     protected abstract void registerEventHandler();
 
     //===================== fragment management ====================================================
-
     public void replaceFragment(int containerLayoutId, Class<?> fragmentClass, Bundle data, boolean isAddBackStack, FragmentTransaction transaction){
         BaseFragment fragment = BaseFragment.newInstance(fragmentClass, data);
         if (containerLayoutId == 0 || fragment == null){

@@ -2,7 +2,6 @@ package com.linhphan.androidboilerplate.api;
 
 import android.content.Context;
 
-import com.linhphan.androidboilerplate.callback.DownloadCallback;
 import com.linhphan.androidboilerplate.util.Logger;
 
 import org.jsoup.Jsoup;

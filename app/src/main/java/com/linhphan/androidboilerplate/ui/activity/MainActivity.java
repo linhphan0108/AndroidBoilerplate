@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.Button;
 
 import com.linhphan.androidboilerplate.R;
+import com.linhphan.androidboilerplate.api.BaseDownloadWorker;
 import com.linhphan.androidboilerplate.api.JsonDownloadWorker;
 import com.linhphan.androidboilerplate.api.Method;
 import com.linhphan.androidboilerplate.api.Parser.IParser;
-import com.linhphan.androidboilerplate.callback.DownloadCallback;
 import com.linhphan.androidboilerplate.ui.fragment.AnimationFragment;
 import com.linhphan.androidboilerplate.ui.fragment.DumpFragment;
 import com.linhphan.androidboilerplate.util.Logger;
@@ -35,9 +35,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         replaceFragment(R.id.fr_container, DumpFragment.class, bundle, false, transaction);
 
         //// Server
-        JsonDownloadWorker worker = new JsonDownloadWorker(this, true, new DownloadCallback() {
+        JsonDownloadWorker worker = new JsonDownloadWorker(this, true, new BaseDownloadWorker.DownloadCallback() {
             @Override
-            public void onSuccessfully(Object data, int requestCode) {
+            public void onSuccessfully(Object data, int requestCode, int responseCode) {
                 switch (requestCode){
                     case 999 :
                         break;
@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
 
             @Override
-            public void onFailed(Exception e, int requestCode) {
+            public void onFailed(Exception e, int requestCode, int responseCode) {
 
             }
         });
@@ -117,10 +117,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     //=============== inner classes ================================================================
     class JsonParser implements IParser{
-
         @Override
-        public Object parse(Object data) {
-            if (data instanceof String){
+        public Object parse(Object data, BaseDownloadWorker.ResponseCodeHolder responseCode) {
+            if (data instanceof String) {
                 Logger.i(getClass().getName(), String.valueOf(data));
             }
             return null;
