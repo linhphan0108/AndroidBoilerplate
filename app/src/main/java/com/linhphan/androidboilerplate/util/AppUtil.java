@@ -11,6 +11,9 @@ import android.content.pm.Signature;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
+import android.telecom.TelecomManager;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 
@@ -18,6 +21,7 @@ import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by linhphan on 11/11/15.
@@ -174,5 +178,63 @@ public class AppUtil {
             }
         }
         return false;
+    }
+
+    public String getDeviceUniqueId(Context context){
+        String result = getAndroidId(context);
+        if (result != null && !result.isEmpty()){
+            return result;
+        }
+
+        result = get1TelephoneManagerId(context);
+        if (result != null && !result.isEmpty()){
+            return result;
+        }
+
+        return getRandomUuid();
+    }
+
+    /**
+     * @return the ANDROID_ID
+     * A 64-bit number (as a hex string) that is randomly
+     * generated when the user first sets up the device and should remain
+     * constant for the lifetime of the user's device. The value may
+     * change if a factory reset is performed on the device.
+     * <p class="note"><strong>Note:</strong> When a device has <a
+     * href="{@docRoot}about/versions/android-4.2.html#MultipleUsers">multiple users</a>
+     * (available on certain devices running Android 4.2 or higher), each user appears as a
+     * completely separate device, so the {@code ANDROID_ID} value is unique to each
+     * user.</p>
+     */
+    private String getAndroidId(Context context){
+        String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        if (androidId != null && androidId.equals("9774d56d682e549c")){ //ANDROID_ID will work on most android device but due to a manufacturer bug, it will return a constant android id 9774d56d682e549c.
+            return null;
+        }
+
+        return androidId;
+    }
+
+    /**
+     * Use with {@link Context#getSystemService} to retrieve a
+     * {@link android.telephony.TelephonyManager} for handling management the
+     * telephony features of the device.
+     *
+     * @see Context#getSystemService
+     * @see android.telephony.TelephonyManager
+     */
+    private String get1TelephoneManagerId(Context context){
+        return ((TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+    }
+
+    /**
+     * <p>
+     * Generates a variant 2, version 4 (randomly generated number) UUID as per
+     * <a href="http://www.ietf.org/rfc/rfc4122.txt">RFC 4122</a>.
+     * </p>
+     */
+    private String getRandomUuid(){
+        return UUID.randomUUID().toString();
     }
 }
