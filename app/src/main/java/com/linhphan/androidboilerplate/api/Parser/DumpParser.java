@@ -1,5 +1,6 @@
 package com.linhphan.androidboilerplate.api.Parser;
 
+import com.linhphan.androidboilerplate.api.BaseDownloadWorker;
 import com.linhphan.androidboilerplate.data.model.DumpModel;
 
 import org.json.JSONArray;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  */
 public class DumpParser implements IParser {
     @Override
-    public Object parse(Object data) {
+    public Object parse(Object data, BaseDownloadWorker.ResponseCodeHolder responseCode) {
         if (data == null)
             return null;
         ArrayList<DumpModel> resultList = null;

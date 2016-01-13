@@ -30,7 +30,7 @@ public class JSoupDownloadWorker extends BaseDownloadWorker {
         Object result = null;
         try {
             Document document = Jsoup.connect(url).get();
-            result = mParser.parse(document);
+            result = mParser.parse(document, mResponseCode);
         } catch (IOException e) {
             e.printStackTrace();
         }
