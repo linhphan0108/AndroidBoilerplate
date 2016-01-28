@@ -12,7 +12,6 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.telecom.TelecomManager;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
@@ -180,13 +179,17 @@ public class AppUtil {
         return false;
     }
 
-    public String getDeviceUniqueId(Context context){
-        String result = getAndroidId(context);
+    /**
+     * try to generate an unique device id
+     * @return an unique device id
+     */
+    public String getUniqueDeviceId(Context context){
+        String result = getTelephoneManagerId(context);
         if (result != null && !result.isEmpty()){
             return result;
         }
 
-        result = get1TelephoneManagerId(context);
+        result = getAndroidId(context);
         if (result != null && !result.isEmpty()){
             return result;
         }
@@ -224,7 +227,7 @@ public class AppUtil {
      * @see Context#getSystemService
      * @see android.telephony.TelephonyManager
      */
-    private String get1TelephoneManagerId(Context context){
+    private String getTelephoneManagerId(Context context){
         return ((TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
     }
 
@@ -234,7 +237,7 @@ public class AppUtil {
      * <a href="http://www.ietf.org/rfc/rfc4122.txt">RFC 4122</a>.
      * </p>
      */
-    private String getRandomUuid(){
+    public String getRandomUuid(){
         return UUID.randomUUID().toString();
     }
 }

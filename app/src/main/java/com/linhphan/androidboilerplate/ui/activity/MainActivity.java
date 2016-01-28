@@ -12,6 +12,7 @@ import com.linhphan.androidboilerplate.api.Method;
 import com.linhphan.androidboilerplate.api.Parser.IParser;
 import com.linhphan.androidboilerplate.ui.fragment.AnimationFragment;
 import com.linhphan.androidboilerplate.ui.fragment.DumpFragment;
+import com.linhphan.androidboilerplate.util.AppUtil;
 import com.linhphan.androidboilerplate.util.Logger;
 
 import java.util.HashMap;
@@ -65,6 +66,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .setParser(new JsonParser())
                 .setParams(params)
                 .execute(url);
+
+
+        AppUtil appUtil = AppUtil.getInstance();
+
+        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
+        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
+        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
+        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
+        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
+        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
+        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
+        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
+
     }
 
 

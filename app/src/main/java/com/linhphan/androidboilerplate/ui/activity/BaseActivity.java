@@ -114,4 +114,9 @@ public abstract class BaseActivity extends AppCompatActivity{
         fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);
         return fragmentTransaction;
     }
+
+    //============= other methods ==================================================================
+    public String getClassTagName(){
+        return this.getClass().getName();
+    }
 }
