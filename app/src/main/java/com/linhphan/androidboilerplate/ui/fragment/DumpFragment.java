@@ -1,8 +1,12 @@
 package com.linhphan.androidboilerplate.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -11,6 +15,7 @@ import android.widget.TextView;
 
 import com.linhphan.androidboilerplate.R;
 import com.linhphan.androidboilerplate.ui.activity.BaseActivity;
+import com.linhphan.androidboilerplate.util.Logger;
 
 /**
  * Created by linhphan on 11/13/15.
@@ -29,10 +34,7 @@ public class DumpFragment extends BaseFragment implements View.OnClickListener {
 
     //================ overridden methods ==========================================================
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
+
 
 
     //================ implemented methods =========================================================

@@ -2,13 +2,11 @@ package com.linhphan.androidboilerplate.ui.fragment;
 
 import android.animation.Animator;
 import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.linhphan.androidboilerplate.R;
 import com.linhphan.androidboilerplate.util.Logger;
@@ -24,7 +22,6 @@ public class AnimationFragment extends BaseFragment implements View.OnClickListe
     private Button mBtnNewView;
     private Button mBtnRemoveView;
     private LinearLayout mLl;
-    private ListView mLv;
 
     //============= overridden methods =============================================================
     @Override
@@ -55,7 +52,6 @@ public class AnimationFragment extends BaseFragment implements View.OnClickListe
         LayoutTransition lt = new LayoutTransition();
         lt.enableTransitionType(LayoutTransition.CHANGING);
         mLl.setLayoutTransition(lt);
-        mLv.setLayoutTransition(lt);
     }
 
     //============= implemented methods ============================================================
