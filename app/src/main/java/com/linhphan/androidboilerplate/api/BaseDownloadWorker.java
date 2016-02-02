@@ -16,6 +16,9 @@ import com.linhphan.androidboilerplate.util.NetworkUtil;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -48,10 +52,12 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     protected Exception mException;
 
     //================== constructors ==============================================================
+
     /**
      * constructs an AsyncTask download worker. this will initialize a progress bar dialog with a STYLE_SPINNER if isShowDialog is set true
+     *
      * @param isShowDialog if this argument is set true, then a dialog will be showed when this download worker is working.
-     * @param mCallback a callback which do something after the download worker is finish or error.
+     * @param mCallback    a callback which do something after the download worker is finish or error.
      */
     public BaseDownloadWorker(Context context, boolean isShowDialog, DownloadCallback mCallback) {
         this.mContext = new WeakReference<>(context);
@@ -66,7 +72,7 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     }
 
     //================= setters and getters ========================================================
-    public BaseDownloadWorker setRequestCode(int requestCode){
+    public BaseDownloadWorker setRequestCode(int requestCode) {
         this.mRequestCode = requestCode;
         return this;
     }
@@ -102,7 +108,7 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     }
 
     /**
-     *this method should be overridden in it's sub classes
+     * this method should be overridden in it's sub classes
      */
     @Override
     protected Object doInBackground(String... params) {
@@ -145,13 +151,15 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     }
 
     //================== other methods =============================================================
+
     /**
      * the progressbar will be cancelable when user touches anywhere outside the dialog if this method is called.
      * default is false.
+     *
      * @return the current instance.
      */
-    public BaseDownloadWorker setDialogCancelable(){
-        if (mProgressbar != null){
+    public BaseDownloadWorker setDialogCancelable() {
+        if (mProgressbar != null) {
             mProgressbar.setCancelable(true);
         }
         return this;
@@ -187,6 +195,7 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
 
     /**
      * setup the horizontal progressbar which will be showed on screen
+     *
      * @return JsonDownloadWorker object
      */
     public BaseDownloadWorker setHorizontalProgressbar() {
@@ -282,6 +291,122 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     }
 
     /**
+     * used to upload files to a remote server
+     * @param path the url point to the remote server
+     * @param fileList a list of files will be uploaded
+     * @param params parameters will be request to the remote server.
+     * @return the response received from the remote server
+     * @throws IOException
+     */
+    protected String sendPostMultipart(String path, Map<String, String> fileList, Map<String, String> params) throws IOException {
+        final int CONNECT_TIMEOUT = 15000;
+        final int READ_TIMEOUT = 10000;
+        final String CHARSET = "UTF-8";
+        final String CRLF = "\r\n";
+        final String TWO_HYPHENS = "--";
+        final String boundary = "*****";
+
+        HttpURLConnection httpURLConnection;
+        DataOutputStream dos;
+        String response = "";
+
+        URL url = new URL(path);
+        httpURLConnection = (HttpURLConnection) url.openConnection();
+
+        //== add header
+        httpURLConnection.setRequestMethod("POST");
+        httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
+        httpURLConnection.setRequestProperty("Cache-Control", "no-cache");
+        httpURLConnection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+        httpURLConnection.setRequestProperty("Accept-Charset", CHARSET);
+
+        //== set post request
+        httpURLConnection.setConnectTimeout(CONNECT_TIMEOUT);
+        httpURLConnection.setReadTimeout(READ_TIMEOUT);
+        httpURLConnection.setUseCaches(false);
+        httpURLConnection.setDoOutput(true);
+        httpURLConnection.setDoInput(true);
+
+        //Start content wrapper
+        dos = new DataOutputStream(httpURLConnection.getOutputStream());
+
+        //==== add form field
+        for (String s : params.keySet()) {
+            String key = String.valueOf(s);
+            String value = params.get(key);
+            try {
+                dos.writeBytes(TWO_HYPHENS + boundary + CRLF);
+                dos.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"" + CRLF);
+                dos.writeBytes("Content-Type: text/plain; charset=" + CHARSET + CRLF);
+                dos.writeBytes(CRLF);
+                dos.writeBytes(value + CRLF);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        dos.writeBytes(CRLF);
+        dos.flush();
+
+        //== add files field
+        for (String s : fileList.keySet()) {
+            String key = String.valueOf(s);
+            String filePath = fileList.get(key);
+            File uploadFile = new File(filePath);
+            if (uploadFile.exists()) {
+                dos.writeBytes(TWO_HYPHENS + boundary + CRLF);
+                dos.writeBytes("Content-Disposition: form-data; name=\"" + key + "\";filename=\"" + uploadFile.getName() + "\"" + CRLF);
+                dos.writeBytes("Content-Type: " + URLConnection.guessContentTypeFromName(uploadFile.getName()) + CRLF);
+                dos.writeBytes("Content-Transfer-Encoding: binary" + CRLF);
+                dos.writeBytes(CRLF);
+
+                FileInputStream fStream = new FileInputStream(uploadFile);
+                int bufferSize = 1024;
+                byte[] buffer = new byte[bufferSize];
+                int length;
+
+                while ((length = fStream.read(buffer)) != -1) {
+                    dos.write(buffer, 0, length);
+                }
+                dos.writeBytes(CRLF);
+                dos.writeBytes(TWO_HYPHENS + boundary + TWO_HYPHENS + CRLF);
+                    /* close streams */
+                fStream.close();
+            }
+        }
+        dos.writeBytes(CRLF);
+        dos.flush();
+        dos.close();
+
+        httpURLConnection.connect();
+        int statusCode;
+        httpURLConnection.connect();
+        statusCode = httpURLConnection.getResponseCode();
+        Logger.d(getClass().getName(), "sending POST  request to URL: " + path);
+        Logger.d(getClass().getName(), "post parameters: " + params);
+        // 200 represents HTTP OK
+        if (statusCode == HttpURLConnection.HTTP_OK) {
+            InputStream in = new BufferedInputStream(httpURLConnection.getInputStream());
+            InputStreamReader inputStreamReader = new InputStreamReader(in, Charset.forName("UTF-8"));
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            response = readBuffer(bufferedReader);
+
+            //disconnecting
+            bufferedReader.close();
+            inputStreamReader.close();
+            in.close();
+            httpURLConnection.disconnect();
+
+        } else {
+            Logger.d(getClass().getName(), "connection is failed");
+//            System.out.println(urlConnection.getResponseMessage());
+//            inputStream = new BufferedInputStream(urlConnection.getInputStream());
+//            strResponse = readStream(inputStream);
+        }
+
+        return response;
+    }
+
+    /**
      * read data from buffer
      *
      * @return data which is presented by a string
@@ -322,10 +447,11 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
 
     /**
      * show notification progress on notification bar. this will show the progress of downloading.
+     *
      * @param contentText the message will be showed in the notification
-     * @param percent the percent of downloading progress
+     * @param percent     the percent of downloading progress
      */
-    protected void showNotificationProgress(Context context, String contentText, int percent){
+    protected void showNotificationProgress(Context context, String contentText, int percent) {
         int notId = 898989;
         Notification notification = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)// TODO: 19/12/2015  must replace the icon for the notification.
@@ -341,6 +467,7 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     }
 
     //=========== inner classes ====================================================================
+
     /**
      * this class will be used to instance an object which is passed to an parser as a parameter to get the response code from server.
      */
@@ -370,6 +497,7 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
         public static final int RESPONSE_CODE_MISSING_PARAMS = 12000;
 
         void onSuccessfully(Object data, int requestCode, int responseCode);
+
         void onFailed(Exception e, int requestCode, int responseCode);
     }
 

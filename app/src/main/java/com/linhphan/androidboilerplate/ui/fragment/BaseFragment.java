@@ -137,7 +137,7 @@ public abstract class BaseFragment extends Fragment {
      */
     protected abstract void registerEventHandler();
 
-    //================== children fragment manager =================================================
+    //================== children fragment management ==============================================
     /**
      *
      * @param containerLayoutId identifier of the container whose fragments are to be replaced
