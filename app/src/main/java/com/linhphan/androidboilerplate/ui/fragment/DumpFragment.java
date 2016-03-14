@@ -1,12 +1,7 @@
 package com.linhphan.androidboilerplate.ui.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -14,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.linhphan.androidboilerplate.R;
-import com.linhphan.androidboilerplate.ui.activity.BaseActivity;
-import com.linhphan.androidboilerplate.util.Logger;
 
 /**
  * Created by linhphan on 11/13/15.
@@ -74,7 +67,7 @@ public class DumpFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @Override
-    protected void getWidgets(View root) {
+    protected void getWidgets(View root, Bundle savedInstanceState) {
         mTxtContent = (TextView) root.findViewById(R.id.txt_content);
         mImg = (ImageView) root.findViewById(R.id.img);
         mBtnRotation = (Button) root.findViewById(R.id.btn_rotation);

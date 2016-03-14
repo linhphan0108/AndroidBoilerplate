@@ -2,6 +2,7 @@ package com.linhphan.androidboilerplate.ui.fragment;
 
 import android.animation.Animator;
 import android.animation.LayoutTransition;
+import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
@@ -35,7 +36,7 @@ public class AnimationFragment extends BaseFragment implements View.OnClickListe
     }
 
     @Override
-    protected void getWidgets(View root) {
+    protected void getWidgets(View root, Bundle savedInstanceState) {
         mImg = (ImageView) root.findViewById(R.id.img);
         mBtnTranslate = (Button) root.findViewById(R.id.btn_translate);
         mBtnNewView = (Button) root.findViewById(R.id.btn_new_view);

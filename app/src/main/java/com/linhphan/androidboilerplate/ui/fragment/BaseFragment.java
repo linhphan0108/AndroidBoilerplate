@@ -2,15 +2,12 @@ package com.linhphan.androidboilerplate.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.AnimRes;
 import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.transition.Transition;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,23 +23,23 @@ import java.lang.reflect.InvocationTargetException;
  */
 public abstract class BaseFragment extends Fragment {
 
-//    public static BaseFragment newInstance(Class<?> c, Bundle bundle){
-//        BaseFragment baseFragment = null;
-//        try {
-//            Constructor<?> constructor = c.getConstructors()[0];
-//            baseFragment = (BaseFragment) constructor.newInstance();
-//            if (bundle != null){
-//                baseFragment.setArguments(bundle);
-//            }
-//        } catch (InvocationTargetException e) {
-//            e.printStackTrace();
-//        } catch (java.lang.InstantiationException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
-//        return baseFragment;
-//    }
+    public static BaseFragment newInstance(Class<?> c, Bundle bundle){
+        BaseFragment baseFragment = null;
+        try {
+            Constructor<?> constructor = c.getConstructors()[0];
+            baseFragment = (BaseFragment) constructor.newInstance();
+            if (bundle != null){
+                baseFragment.setArguments(bundle);
+            }
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return baseFragment;
+    }
 
     //================= overridden methods =========================================================
     @Override
@@ -62,7 +59,12 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Logger.d(getClassTagName(), "On onCreateView");
-        return inflater.inflate(getFragmentLayoutResource(), container, false);
+        View root = inflater.inflate(getFragmentLayoutResource(), container, false);
+
+        getWidgets(root, savedInstanceState);
+        registerEventHandler();
+
+        return root;
     }
 
     @Override
@@ -75,9 +77,6 @@ public abstract class BaseFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Logger.d(getClassTagName(), "On onStart");
-
-        getWidgets(getView());
-        registerEventHandler();
     }
 
     @Override
@@ -130,7 +129,7 @@ public abstract class BaseFragment extends Fragment {
     /**
      * views should retrieve here
      */
-    protected abstract void getWidgets(View root);
+    protected abstract void getWidgets(View root, Bundle savedInstanceState);
 
     /**
      * register event listeners fro views

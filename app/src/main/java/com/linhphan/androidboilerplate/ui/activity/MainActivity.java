@@ -114,13 +114,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     Bundle bundle = new Bundle();
                     bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
                     FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, R.anim.no_sliding, 0, 0);
-                    replaceFragment(R.id.fr_container, DumpFragment.class, true, bundle, transaction);
+                    addFragment(R.id.fr_container, DumpFragment.class, true, bundle, transaction);
 
                 }else if (mAutoIncreaseNumber % 2 == 1){
                     Bundle bundle = new Bundle();
                     bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
                     FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, R.anim.no_sliding, 0, 0);
-                    replaceFragment(R.id.fr_container, AnimationFragment.class, true, bundle, transaction);
+                    addFragment(R.id.fr_container, AnimationFragment.class, true, bundle, transaction);
                 }
                 break;
 
