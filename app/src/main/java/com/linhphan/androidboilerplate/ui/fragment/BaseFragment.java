@@ -57,6 +57,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Nullable
     @Override
+    @Deprecated
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Logger.d(getClassTagName(), "On onCreateView");
         View root = inflater.inflate(getFragmentLayoutResource(), container, false);
@@ -112,7 +113,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Logger.d(getClassTagName(), "On onDestroy");
+        Logger.d(getClassTagName(), "On onDetach");
     }
 
     //================== abstract methods ==========================================================

@@ -141,6 +141,9 @@ public abstract class BaseActivity extends AppCompatActivity{
     }
 
 
+    /**
+     * pop entire back stack
+     */
     protected void clearBackStack(){
         FragmentManager manager = getSupportFragmentManager();
         manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

@@ -1,7 +1,10 @@
 package com.linhphan.androidboilerplate.ui.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -12,6 +15,7 @@ import com.linhphan.androidboilerplate.api.Method;
 import com.linhphan.androidboilerplate.api.Parser.IParser;
 import com.linhphan.androidboilerplate.ui.fragment.AnimationFragment;
 import com.linhphan.androidboilerplate.ui.fragment.DumpFragment;
+import com.linhphan.androidboilerplate.ui.fragment.TouchToZoomImageFragment;
 import com.linhphan.androidboilerplate.util.AppUtil;
 import com.linhphan.androidboilerplate.util.Logger;
 
@@ -22,8 +26,11 @@ import java.util.Map;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private Button mBtnNewFragment;
+    private Button mBtnClearBackStack;
+    private Button mBtnPop;
 
     private int mAutoIncreaseNumber = 0;
+    private final int mTotalPage = 2;
 
     //=============== overridden methods ===========================================================
     @Override
@@ -32,53 +39,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         Bundle bundle = new Bundle();
         bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
-        FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, R.anim.no_sliding, 0, 0);
-        addFragment(R.id.fr_container, DumpFragment.class, false, bundle, transaction);
-
-        //// Server
-        JsonDownloadWorker worker = new JsonDownloadWorker(this, true, new BaseDownloadWorker.DownloadCallback() {
-            @Override
-            public void onSuccessfully(Object data, int requestCode, int responseCode) {
-                switch (requestCode){
-                    case 999 :
-                        break;
-
-                    case 1000:
-
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailed(Exception e, int requestCode, int responseCode) {
-
-            }
-        });
-
-        String url = "http://dev.bravesoft.vn/FoodCoach/API/user_login.json";
-        Map<String, String> params = new HashMap<>();
-        params.put("device_token", "abc");
-        params.put("username", "user_1");
-        params.put("password", "123456");
-
-        worker.setType(Method.POST)
-                .setRequestCode(999)
-                .setParser(new JsonParser())
-                .setParams(params)
-                .execute(url);
-
-
-        AppUtil appUtil = AppUtil.getInstance();
-
-        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
-        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
-        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
-        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
-        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
-        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
-        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
-        Logger.i(getClassTagName(), "uuid " +appUtil.getRandomUuid());
-
+        replaceFragment(R.id.fr_container, TouchToZoomImageFragment.class, false, bundle, null);
     }
 
 
@@ -96,11 +57,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void getWidgets() {
         mBtnNewFragment = (Button) findViewById(R.id.btn_new_Fragment);
+        mBtnClearBackStack = (Button) findViewById(R.id.btn_clear_back_stack);
+        mBtnPop = (Button) findViewById(R.id.btn_pop);
     }
 
     @Override
     protected void registerEventHandler() {
         mBtnNewFragment.setOnClickListener(this);
+        mBtnClearBackStack.setOnClickListener(this);mBtnPop.getParent();
+        mBtnPop.setOnClickListener(this);
     }
 
     //=============== implemented methods ==========================================================
@@ -110,18 +75,32 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.btn_new_Fragment:
 
                 mAutoIncreaseNumber++;
-                if (mAutoIncreaseNumber % 2 == 0) {
+                if (mAutoIncreaseNumber % mTotalPage == 0) {
                     Bundle bundle = new Bundle();
                     bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
-                    FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, R.anim.no_sliding, 0, 0);
-                    addFragment(R.id.fr_container, DumpFragment.class, true, bundle, transaction);
+                    FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, 0, 0, R.anim.sliding_exit_left_right);
+                    replaceFragment(R.id.fr_container, DumpFragment.class, true, bundle, transaction);
 
-                }else if (mAutoIncreaseNumber % 2 == 1){
+                }else if (mAutoIncreaseNumber % mTotalPage == 1){
                     Bundle bundle = new Bundle();
                     bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
-                    FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, R.anim.no_sliding, 0, 0);
-                    addFragment(R.id.fr_container, AnimationFragment.class, true, bundle, transaction);
+                    FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, 0, 0, R.anim.sliding_exit_left_right);
+                    replaceFragment(R.id.fr_container, DumpFragment.class, true, bundle, transaction);
+                }else if(mAutoIncreaseNumber % mTotalPage == 2){
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
+                    FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, 0, 0, R.anim.sliding_exit_left_right);
+                    replaceFragment(R.id.fr_container, TouchToZoomImageFragment.class, true, bundle, transaction);
                 }
+                break;
+
+            case R.id.btn_clear_back_stack:
+                clearBackStacks();
+                break;
+
+            case R.id.btn_pop:
+                clearBackStack();
+                printBackStackSize();
                 break;
 
             default:
@@ -129,14 +108,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    //=============== inner classes ================================================================
-    class JsonParser implements IParser{
-        @Override
-        public Object parse(Object data, BaseDownloadWorker.ResponseCodeHolder responseCode) {
-            if (data instanceof String) {
-                Logger.i(getClass().getName(), String.valueOf(data));
-            }
-            return null;
+    protected void clearBackStacks(){
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        int count = manager.getBackStackEntryCount();
+        printBackStackSize();
+        for (int i = 0; i< count; i++){
+            FragmentManager.BackStackEntry bs = manager.getBackStackEntryAt(i);
+            String tag = bs.getName();
+            Fragment fragment = manager.findFragmentByTag(tag);
+            ft.remove(fragment);
         }
+        ft.commit();
+        printBackStackSize();
+    }
+
+    private void printBackStackSize(){
+        FragmentManager manager = getSupportFragmentManager();
+        int count = manager.getBackStackEntryCount();
+        Logger.d("back stack size: ", count +"");
     }
 }

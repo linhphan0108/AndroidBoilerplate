@@ -26,8 +26,25 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@android:color/holo_blue_bright"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:layout_margin="10dp"
             android:text="New Screen" />
+        <Button
+            android:id="@+id/btn_clear_back_stack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/holo_blue_bright"
+            android:layout_margin="10dp"
+            android:text="Clear" />
+
+        <Button
+            android:id="@+id/btn_pop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/holo_blue_bright"
+            android:layout_margin="10dp"
+            android:text="pop" />
+
     </LinearLayout>
 </RelativeLayout>
