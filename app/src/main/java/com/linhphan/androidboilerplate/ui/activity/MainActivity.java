@@ -15,6 +15,7 @@ import com.linhphan.androidboilerplate.api.Method;
 import com.linhphan.androidboilerplate.api.Parser.IParser;
 import com.linhphan.androidboilerplate.ui.fragment.AnimationFragment;
 import com.linhphan.androidboilerplate.ui.fragment.DumpFragment;
+import com.linhphan.androidboilerplate.ui.fragment.HandleImageFragment;
 import com.linhphan.androidboilerplate.ui.fragment.TouchToZoomImageFragment;
 import com.linhphan.androidboilerplate.util.AppUtil;
 import com.linhphan.androidboilerplate.util.Logger;
@@ -30,7 +31,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button mBtnPop;
 
     private int mAutoIncreaseNumber = 0;
-    private final int mTotalPage = 2;
+    private final int mTotalPage = 4;
 
     //=============== overridden methods ===========================================================
     @Override
@@ -39,7 +40,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         Bundle bundle = new Bundle();
         bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
-        replaceFragment(R.id.fr_container, TouchToZoomImageFragment.class, false, bundle, null);
+        replaceFragment(R.id.fr_container, HandleImageFragment.class, false, bundle, null);
     }
 
 
@@ -55,7 +56,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
-    protected void getWidgets() {
+    protected void getWidgets(Bundle savedInstanceState) {
         mBtnNewFragment = (Button) findViewById(R.id.btn_new_Fragment);
         mBtnClearBackStack = (Button) findViewById(R.id.btn_clear_back_stack);
         mBtnPop = (Button) findViewById(R.id.btn_pop);
@@ -79,18 +80,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     Bundle bundle = new Bundle();
                     bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
                     FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, 0, 0, R.anim.sliding_exit_left_right);
-                    replaceFragment(R.id.fr_container, DumpFragment.class, true, bundle, transaction);
+                    replaceFragment(R.id.fr_container, DumpFragment.class, false, bundle, transaction);
 
                 }else if (mAutoIncreaseNumber % mTotalPage == 1){
                     Bundle bundle = new Bundle();
                     bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
                     FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, 0, 0, R.anim.sliding_exit_left_right);
-                    replaceFragment(R.id.fr_container, DumpFragment.class, true, bundle, transaction);
+                    replaceFragment(R.id.fr_container, DumpFragment.class, false, bundle, transaction);
                 }else if(mAutoIncreaseNumber % mTotalPage == 2){
                     Bundle bundle = new Bundle();
                     bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
                     FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, 0, 0, R.anim.sliding_exit_left_right);
-                    replaceFragment(R.id.fr_container, TouchToZoomImageFragment.class, true, bundle, transaction);
+                    replaceFragment(R.id.fr_container, TouchToZoomImageFragment.class, false, bundle, transaction);
+                }else if(mAutoIncreaseNumber % mTotalPage == 3){
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(DumpFragment.ARGUMENT_KEY, mAutoIncreaseNumber);
+                    FragmentTransaction transaction = getFragmentTransaction(R.anim.sliding_enter_right_left, 0, 0, R.anim.sliding_exit_left_right);
+                    replaceFragment(R.id.fr_container, HandleImageFragment.class, false, bundle, transaction);
                 }
                 break;
 
