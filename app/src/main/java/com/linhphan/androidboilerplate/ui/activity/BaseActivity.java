@@ -30,7 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity{
 
         setContentView(getActivityLayoutResource());
         init();
-        getWidgets();
+        getWidgets(savedInstanceState);
         registerEventHandler();
     }
 
@@ -64,8 +64,9 @@ public abstract class BaseActivity extends AppCompatActivity{
 
     /**
      * views should retrieve here
+     * * this method is called in {@link AppCompatActivity#onCreate}
      */
-    protected abstract void getWidgets();
+    protected abstract void getWidgets(Bundle savedInstanceState);
 
     /**
      * register event listeners fro views
