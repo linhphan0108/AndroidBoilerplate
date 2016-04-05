@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 
 import com.linhphan.androidboilerplate.R;
 import com.linhphan.androidboilerplate.api.Parser.IParser;
@@ -433,12 +434,17 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
                 if (!firstParameter) {
                     builder.append(PARAMETER_DELIMITER);
                 }
+                String value = params.get(key);
+                if (TextUtils.isEmpty(value)){
+                    value = "";
+                }
                 builder.append(key)
                         .append(PARAMETER_EQUALS_CHAR)
-                        .append(URLEncoder.encode(params.get(key), "UTF-8"));
+                        .append(URLEncoder.encode(value, "UTF-8"));
 
-                if (firstParameter)
+                if (firstParameter) {
                     firstParameter = false;
+                }
             }
         }
 
