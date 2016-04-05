@@ -15,44 +15,69 @@ import com.linhphan.androidboilerplate.util.Constant;
  */
 public class ConfirmDialog extends DialogFragment {
 
-    ConfirmDialogCallback callback;
+    private int mRequestCode;
+    private String mNegativeButton;
+    private String mPositiveButton;
+    private String mTitle;
+    private String mMessage;
+
+    private ConfirmDialogCallback mCallback;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        Bundle bundle = getArguments();
-        String title = null;
-        String message = null;
-        if (bundle != null) {
-            title = bundle.getString(Constant.DIALOG_TITLE, "");
-            message = bundle.getString(Constant.DIALOG_MESSAGE, "");
-        }
-
         return new AlertDialog.Builder(getActivity())
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                .setTitle(mTitle)
+                .setMessage(mMessage)
+                .setPositiveButton(mPositiveButton, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (callback != null)
-                            callback.onOk();
+                        if (mCallback != null) {
+                            mCallback.onPositiveButtonClicked();
+                        }
+                        dialog.dismiss();
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(mNegativeButton, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        mCallback.onNegativeButtonClicked();
                         dialog.dismiss();
                     }
                 })
                 .create();
     }
 
+    //============= setters and getters ============================================================
+    public int getRequestCode() {
+        return mRequestCode;
+    }
+
+    public void setRequestCode(int requestCode) {
+        this.mRequestCode = requestCode;
+    }
+
+    public void setNegativeButtonName(String title) {
+        this.mNegativeButton = title;
+    }
+
+    public void setPositiveButtonName(String title) {
+        this.mPositiveButton = title;
+    }
+
+    public void setMessage(String message) {
+        this.mMessage = message;
+    }
+
+    public void setTitle(String title) {
+        this.mTitle = title;
+    }
+
     /**
      * set up callback listeners to the dialog fragment
      * @param callback the callback handler
      */
-    public void registerCallback(ConfirmDialogCallback callback){
-        this.callback = callback;
+    public void setCallback(ConfirmDialogCallback callback){
+        this.mCallback = callback;
     }
 }
