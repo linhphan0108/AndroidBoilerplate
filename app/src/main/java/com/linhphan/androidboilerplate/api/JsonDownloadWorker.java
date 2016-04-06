@@ -29,8 +29,8 @@ public class JsonDownloadWorker extends BaseDownloadWorker {
                 data = sendGet(url);
             }
             Logger.i(getClass().getName(), "got data from server: " + data);
-            if (mParser != null)
-                return mParser.parse(data, mResponseCode);
+            if (mParser != null && data != null)
+                return mParser .parse(data, mResponseCode);
             else
                 return data;
         } catch (IOException e) {
