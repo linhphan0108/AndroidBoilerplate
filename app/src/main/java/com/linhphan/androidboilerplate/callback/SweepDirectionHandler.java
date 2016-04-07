@@ -8,7 +8,7 @@ import com.linhphan.androidboilerplate.util.Logger;
 /**
  * Created by linhphan on 12/21/15.
  */
-public class OnTouchHandler implements View.OnTouchListener {
+public class SweepDirectionHandler implements View.OnTouchListener {
 
     private final int UN_TOUCH = -1;
 
@@ -18,7 +18,7 @@ public class OnTouchHandler implements View.OnTouchListener {
     private int pointId;
 
     //======================= constructor ==========================================================
-    public OnTouchHandler(IOnTouchCallback callback) {
+    public SweepDirectionHandler(IOnTouchCallback callback) {
         this.callback = callback;
         pointId = UN_TOUCH;
     }

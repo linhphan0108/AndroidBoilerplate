@@ -1,6 +1,8 @@
 package com.linhphan.androidboilerplate.util;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by linhphan on 11/24/15.
@@ -54,5 +56,25 @@ public class TextUtil {
             sb.setCharAt(i, removeAccent(s.charAt(i)));
         }
         return sb.toString();
+    }
+
+    /**
+     * determine an email address is correct or not
+     * @param email which will be validated
+     * @return true if the given email address is correct, otherwise return false
+     */
+    public static boolean isEmailValid(String email) {
+        String regEx =
+                "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+                        +"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                        +"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                        +"([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
+
+        Pattern pattern = Pattern.compile(regEx,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
     }
 }
