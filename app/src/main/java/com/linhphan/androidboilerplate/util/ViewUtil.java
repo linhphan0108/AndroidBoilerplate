@@ -31,9 +31,27 @@ public class ViewUtil {
         return dp * density;
     }
 
-    public static void hideKeyBoard(Activity activity){
-        InputMethodManager manager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        manager.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+//    public static void hideKeyBoard(Activity activity){
+//        InputMethodManager manager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+//        manager.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+//    }
+
+
+    public static void hideSoftKeyboard(Activity activity) {
+        if (activity == null){
+            return;
+        }
+        View focusedView = activity.getCurrentFocus();
+        if (focusedView == null){
+            return;
+        }
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+    }
+
+    public static void hideKeyboard(Context context, View viewBinder) {
+        InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(viewBinder.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     public void showSoftKeyboard(Activity activity, View view) {
