@@ -45,12 +45,17 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (BaseActivity.isClearBackStack)
+            return;
+        Logger.d(getClassTagName(), "*****************************************");
         Logger.d(getClassTagName(), "On onAttach");
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (BaseActivity.isClearBackStack)
+            return;
         Logger.d(getClassTagName(), "On onCreate");
         init();
     }
@@ -59,6 +64,8 @@ public abstract class BaseFragment extends Fragment {
     @Override
     @Deprecated
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (BaseActivity.isClearBackStack)
+            return null;
         Logger.d(getClassTagName(), "On onCreateView");
         View root = inflater.inflate(getFragmentLayoutResource(), container, false);
 
@@ -71,18 +78,24 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (BaseActivity.isClearBackStack)
+            return;
         Logger.d(getClassTagName(), "On onActivityCreated");
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        if (BaseActivity.isClearBackStack)
+            return;
         Logger.d(getClassTagName(), "On onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (BaseActivity.isClearBackStack)
+            return;
         Logger.d(getClassTagName(), "On resume");
     }
 

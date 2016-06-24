@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.NumberPicker;
 
 import com.linhphan.androidboilerplate.R;
 import com.linhphan.androidboilerplate.ui.widget.ImageItem;
@@ -14,6 +15,7 @@ import com.linhphan.androidboilerplate.ui.widget.ImageItem;
  */
 public class HandleImageFragment extends BaseFragment implements View.OnClickListener {
     private Button mBtnNewItem;
+    private NumberPicker mNumberPicker;
 
     @Override
     protected int getFragmentLayoutResource() {
@@ -33,6 +35,8 @@ public class HandleImageFragment extends BaseFragment implements View.OnClickLis
         frameLayout.addView(stickItem);
 
         mBtnNewItem = (Button) root.findViewById(R.id.btn_add_new_item);
+        mNumberPicker = (NumberPicker) root.findViewById(R.id.numberPicker);
+        setupNumberPicker();
     }
 
     @Override
@@ -57,5 +61,13 @@ public class HandleImageFragment extends BaseFragment implements View.OnClickLis
             default:
                 break;
         }
+    }
+
+    private void setupNumberPicker(){
+        String[] arr = new String[]{"1.0", "1.5", "2.0", "2.5", "3.0"};
+        mNumberPicker.setMinValue(0);
+        mNumberPicker.setMaxValue(arr.length -1);
+        mNumberPicker.setWrapSelectorWheel(true);
+        mNumberPicker.setDisplayedValues(arr);
     }
 }

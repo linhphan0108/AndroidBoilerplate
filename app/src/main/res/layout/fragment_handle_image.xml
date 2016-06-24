@@ -10,4 +10,12 @@
         android:background="@drawable/bg_btn"
         android:text="+"/>
 
+    <NumberPicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPicker"
+        android:layout_gravity="center"
+        android:descendantFocusability="blocksDescendants"
+        />
+
 </FrameLayout>
