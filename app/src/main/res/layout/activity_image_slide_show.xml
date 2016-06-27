@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/img_slider1"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:visibility="visible"
+        android:background="@color/com_facebook_blue"
+        android:layout_gravity="center"
+        />
+
+    <ImageView
+        android:id="@+id/img_slider2"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@color/com_facebook_blue"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        />
+</FrameLayout>
