@@ -19,7 +19,7 @@ import java.net.URL;
 /**
  * Created by linhphan on 11/26/15.
  */
-public class FileDownloadWorker extends BaseDownloadWorker {
+public class FileDownloadWorker extends BaseWorker {
 
     public FileDownloadWorker(Context mContext, boolean isShowDialog, DownloadCallback mCallback) {
         super(mContext, isShowDialog, mCallback);

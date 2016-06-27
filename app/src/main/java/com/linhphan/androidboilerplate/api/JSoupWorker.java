@@ -12,9 +12,9 @@ import java.io.IOException;
 /**
  * Created by linhphan on 11/17/15.
  */
-public class JSoupDownloadWorker extends BaseDownloadWorker {
+public class JSoupWorker extends BaseWorker {
 
-    public JSoupDownloadWorker(Context mContext, boolean isShowDialog, DownloadCallback mCallback) {
+    public JSoupWorker(Context mContext, boolean isShowDialog, DownloadCallback mCallback) {
         super(mContext, isShowDialog, mCallback);
     }
 

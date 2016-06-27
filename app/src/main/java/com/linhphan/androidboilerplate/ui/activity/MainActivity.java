@@ -4,24 +4,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.linhphan.androidboilerplate.R;
-import com.linhphan.androidboilerplate.api.BaseDownloadWorker;
-import com.linhphan.androidboilerplate.api.JsonDownloadWorker;
-import com.linhphan.androidboilerplate.api.Method;
-import com.linhphan.androidboilerplate.api.Parser.IParser;
-import com.linhphan.androidboilerplate.ui.fragment.AnimationFragment;
 import com.linhphan.androidboilerplate.ui.fragment.DumpFragment;
 import com.linhphan.androidboilerplate.ui.fragment.HandleImageFragment;
 import com.linhphan.androidboilerplate.ui.fragment.TouchToZoomImageFragment;
-import com.linhphan.androidboilerplate.util.AppUtil;
 import com.linhphan.androidboilerplate.util.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {

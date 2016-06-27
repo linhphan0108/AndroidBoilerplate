@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.linhphan.androidboilerplate.R;
 import com.linhphan.androidboilerplate.api.Parser.IParser;
@@ -35,7 +36,7 @@ import java.util.Map;
 /**
  * Created by linhphan on 11/17/15.
  */
-public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
+public class BaseWorker extends AsyncTask<String, Integer, Object> {
     protected final WeakReference<Context> mContext;
 
     protected Method mType = Method.GET;//the method of request whether POST or GET, default value is GET
@@ -60,7 +61,7 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
      * @param isShowDialog if this argument is set true, then a dialog will be showed when this download worker is working.
      * @param mCallback    a callback which do something after the download worker is finish or error.
      */
-    public BaseDownloadWorker(Context context, boolean isShowDialog, DownloadCallback mCallback) {
+    public BaseWorker(Context context, boolean isShowDialog, DownloadCallback mCallback) {
         this.mContext = new WeakReference<>(context);
         this.mCallback = mCallback;
 
@@ -73,22 +74,22 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     }
 
     //================= setters and getters ========================================================
-    public BaseDownloadWorker setRequestCode(int requestCode) {
+    public BaseWorker setRequestCode(int requestCode) {
         this.mRequestCode = requestCode;
         return this;
     }
 
-    public BaseDownloadWorker setType(Method type) {
+    public BaseWorker setType(Method type) {
         this.mType = type;
         return this;
     }
 
-    public BaseDownloadWorker setParams(Map<String, String> params) {
+    public BaseWorker setParams(Map<String, String> params) {
         this.mParams = params;
         return this;
     }
 
-    public BaseDownloadWorker setParser(IParser jsonParser) {
+    public BaseWorker setParser(IParser jsonParser) {
         mParser = jsonParser;
         return this;
     }
@@ -159,21 +160,21 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
      *
      * @return the current instance.
      */
-    public BaseDownloadWorker setDialogCancelable() {
+    public BaseWorker setDialogCancelable() {
         if (mProgressbar != null) {
             mProgressbar.setCancelable(true);
         }
         return this;
     }
 
-    public BaseDownloadWorker setDialogCancelCallback(String buttonName, DialogInterface.OnClickListener callback) {
+    public BaseWorker setDialogCancelCallback(String buttonName, DialogInterface.OnClickListener callback) {
         if (mProgressbar != null) {
             mProgressbar.setButton(DialogInterface.BUTTON_NEGATIVE, buttonName, callback);
         }
         return this;
     }
 
-    public BaseDownloadWorker setDialogTitle(String title) {
+    public BaseWorker setDialogTitle(String title) {
         if (mProgressbar != null) {
             if (title != null && !title.isEmpty()) {
                 mProgressbar.setTitle(title);
@@ -185,7 +186,7 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     /**
      * set a message to the dialog, if
      */
-    public BaseDownloadWorker setDialogMessage(String message) {
+    public BaseWorker setDialogMessage(String message) {
         if (mProgressbar != null) {
             if (message != null && !message.isEmpty()) {
                 mProgressbar.setMessage(message);
@@ -197,9 +198,9 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
     /**
      * setup the horizontal progressbar which will be showed on screen
      *
-     * @return JsonDownloadWorker object
+     * @return JsonWorker object
      */
-    public BaseDownloadWorker setHorizontalProgressbar() {
+    public BaseWorker setHorizontalProgressbar() {
         mProgressbar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressbar.setMax(100);
         mProgressbar.setProgress(0);
@@ -223,8 +224,8 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 
         int responseCode = httpURLConnection.getResponseCode();
-        Logger.i(getClass().getName(), "sending POST  request to URL: " + path);
-        Logger.i(getClass().getName(), "post parameters: " + query);
+        Logger.i(getClass().getName(), "sending GET  request to URL: " + path);
+        Logger.i(getClass().getName(), "get parameters: " + query);
         Logger.i(getClass().getName(), "response code: " + responseCode);
 
         if (responseCode != HttpURLConnection.HTTP_OK) {
@@ -341,22 +342,30 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
                 dos.writeBytes("Content-Type: text/plain; charset=" + CHARSET + CRLF);
                 dos.writeBytes(CRLF);
                 dos.writeBytes(value + CRLF);
+                dos.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            Logger.d(getTag(), "param: " + key + " - " + params.get(key));
         }
-        dos.writeBytes(CRLF);
-        dos.flush();
+//        dos.writeBytes(CRLF);
+//        dos.flush();
 
         //== add files field
         for (String s : fileList.keySet()) {
             String key = String.valueOf(s);
             String filePath = fileList.get(key);
+            Log.e("uploaded file: ", filePath);
             File uploadFile = new File(filePath);
             if (uploadFile.exists()) {
                 dos.writeBytes(TWO_HYPHENS + boundary + CRLF);
                 dos.writeBytes("Content-Disposition: form-data; name=\"" + key + "\";filename=\"" + uploadFile.getName() + "\"" + CRLF);
-                dos.writeBytes("Content-Type: " + URLConnection.guessContentTypeFromName(uploadFile.getName()) + CRLF);
+                try {
+                    dos.writeBytes("Content-Type: " + URLConnection.guessContentTypeFromName(uploadFile.getName()) + CRLF);
+                } catch (Exception e) {
+                    dos.writeBytes("Content-Type: " + getFileType(uploadFile.getName()) + CRLF);
+                    Log.e("File Type", uploadFile.getName()+"");
+                }
                 dos.writeBytes("Content-Transfer-Encoding: binary" + CRLF);
                 dos.writeBytes(CRLF);
 
@@ -372,6 +381,7 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
                 dos.writeBytes(TWO_HYPHENS + boundary + TWO_HYPHENS + CRLF);
                     /* close streams */
                 fStream.close();
+                Logger.d(getTag(), "file: " + key + " - " + params.get(key));
             }
         }
         dos.writeBytes(CRLF);
@@ -379,11 +389,26 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
         dos.close();
 
         httpURLConnection.connect();
-        int statusCode;
-        httpURLConnection.connect();
-        statusCode = httpURLConnection.getResponseCode();
+        int statusCode = 0;
+        try {
+            httpURLConnection.connect();
+            statusCode = httpURLConnection.getResponseCode();
+        } catch (EOFException e1) {
+//            if (count < 5) {
+//                urlConnection.disconnect();
+//                count++;
+//                String temp = connectToMULTIPART_POST_service(postName);
+//                if (temp != null && !temp.equals("")) {
+//                    return temp;
+//                }
+//            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Logger.d(getClass().getName(), "sending POST  request to URL: " + path);
         Logger.d(getClass().getName(), "post parameters: " + params);
+
         // 200 represents HTTP OK
         if (statusCode == HttpURLConnection.HTTP_OK) {
             InputStream in = new BufferedInputStream(httpURLConnection.getInputStream());
@@ -405,6 +430,18 @@ public class BaseDownloadWorker extends AsyncTask<String, Integer, Object> {
         }
 
         return response;
+    }
+
+    private String getFileType(String s) {
+        String type = null;
+
+        if(s.endsWith("png")) {
+            type = "image/png";
+        } else if(s.endsWith("jpg")) {
+            type = "image/jpeg";
+        }
+
+        return type;
     }
 
     /**

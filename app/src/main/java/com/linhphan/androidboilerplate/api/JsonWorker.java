@@ -9,9 +9,9 @@ import java.io.IOException;
 /**
  * Created by linhphan on 11/12/15.
  */
-public class JsonDownloadWorker extends BaseDownloadWorker {
+public class JsonWorker extends BaseWorker {
 
-    public JsonDownloadWorker(Context mContext, boolean isShowDialog,DownloadCallback mCallback) {
+    public JsonWorker(Context mContext, boolean isShowDialog, DownloadCallback mCallback) {
         super(mContext, isShowDialog, mCallback);
     }
 
