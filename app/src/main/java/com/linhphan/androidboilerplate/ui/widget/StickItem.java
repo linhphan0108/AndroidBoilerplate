@@ -16,7 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.linhphan.androidboilerplate.util.Logger;
-import com.linhphan.androidboilerplate.util.ViewUtil;
+import com.linhphan.androidboilerplate.util.DisplayUtil;
 
 /**
  * Created by linhphan on 3/17/16.
@@ -60,6 +60,11 @@ public abstract class StickItem extends FrameLayout implements View.OnTouchListe
     @TargetApi(21)
     public StickItem(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     //============== implemented methods ===========================================================
@@ -129,8 +134,8 @@ public abstract class StickItem extends FrameLayout implements View.OnTouchListe
 
     //============== inner methods =================================================================
     private void init(Context context) {
-        int size = (int) ViewUtil.convertDp2Px(MIN_SIZE_DP);
-        int buttonSize = (int) ViewUtil.convertDp2Px(BUTTON_SIZE_DP);
+        int size = (int) DisplayUtil.convertDp2Px(MIN_SIZE_DP);
+        int buttonSize = (int) DisplayUtil.convertDp2Px(BUTTON_SIZE_DP);
 
         LayoutParams layoutParams = new LayoutParams(size, size, Gravity.CENTER);
         this.setLayoutParams(layoutParams);
@@ -196,7 +201,7 @@ public abstract class StickItem extends FrameLayout implements View.OnTouchListe
             paint = new Paint(Paint.ANTI_ALIAS_FLAG);
             paint.setColor(Color.GRAY);
             paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(ViewUtil.convertDp2Px(BORDER_THIN_DP));
+            paint.setStrokeWidth(DisplayUtil.convertDp2Px(BORDER_THIN_DP));
         }
 
         @Override

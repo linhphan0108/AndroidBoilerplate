@@ -10,7 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 /**
  * Created by linhphan on 11/11/15.
  */
-public class ViewUtil {
+public class DisplayUtil {
     /**
      * convert pixel unit to dp unit
      * @param px the width in pixel

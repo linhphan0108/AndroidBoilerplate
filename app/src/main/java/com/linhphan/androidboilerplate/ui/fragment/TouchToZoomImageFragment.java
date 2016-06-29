@@ -14,7 +14,7 @@ import android.widget.ImageView;
 
 import com.linhphan.androidboilerplate.R;
 import com.linhphan.androidboilerplate.util.Logger;
-import com.linhphan.androidboilerplate.util.ViewUtil;
+import com.linhphan.androidboilerplate.util.DisplayUtil;
 
 /**
  * Created by linhphan on 3/16/16.
@@ -49,8 +49,8 @@ public class TouchToZoomImageFragment extends BaseFragment {
 
         mRealBitmapHeight = bitmap.getWidth();
         mRealBitmapHeight = bitmap.getHeight();
-        int imageViewWidth = (int)ViewUtil.convertDp2Px(200);
-        int imageViewHeight = (int)ViewUtil.convertDp2Px(360);
+        int imageViewWidth = (int) DisplayUtil.convertDp2Px(200);
+        int imageViewHeight = (int) DisplayUtil.convertDp2Px(360);
 
         float ratioScale = Math.min((float)imageViewWidth / mRealBitmapHeight, (float)imageViewHeight / mRealBitmapHeight);
 
