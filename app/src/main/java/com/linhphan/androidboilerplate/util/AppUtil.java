@@ -97,8 +97,11 @@ public class AppUtil {
      */
     public void openAppInPlayStore(Activity activity, String packageName){
         try {
+            //go to new app version on play store
             activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
         } catch (android.content.ActivityNotFoundException anfe) {
+            //if there hasn't an installed play store app
+            //then go to new app version on web version of play store
             activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)));
         }
     }
