@@ -92,6 +92,18 @@ public class AppUtil {
     }
 
     /**
+     * open an app in google play store by package name.
+     * the package name can got from activity or context object
+     */
+    public void openAppInPlayStore(Activity activity, String packageName){
+        try {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)));
+        }
+    }
+
+    /**
      * open galleries app
      * if there are many applications are suitable then the OS will open a chooser dialog to pick one
      */
