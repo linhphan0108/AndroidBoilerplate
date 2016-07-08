@@ -24,6 +24,10 @@
         </activity>
 
         <activity android:name=".ui.activity.ImageSlideShowActivity">
+
+        </activity>
+
+        <activity android:name=".ui.activity.VideoPlayerRotationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
