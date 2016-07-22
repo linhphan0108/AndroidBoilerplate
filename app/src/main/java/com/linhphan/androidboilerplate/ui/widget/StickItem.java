@@ -3,11 +3,15 @@ package com.linhphan.androidboilerplate.ui.widget;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,10 +41,8 @@ public abstract class StickItem extends FrameLayout implements View.OnTouchListe
     private ImageView mBtnScale;
     private ImageView mBtnFlip;
 
-    private float mThisX;
-    private float mThisY;
-    float mEventRawX = 0f;
-    float mEventRawY = 0f;
+    private PointF origin = new PointF();
+    private PointF center = new PointF();
 
     //=========== constructors ======================================================================
     public StickItem(Context context) {
@@ -71,19 +73,64 @@ public abstract class StickItem extends FrameLayout implements View.OnTouchListe
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-        if (BUTTON_SCALE_TAG.equals(v.getTag())){//==== scaling
+        if (BUTTON_SCALE_TAG.equals(v.getTag())){//==== scaling and rotating
             switch (event.getAction()){
                 case MotionEvent.ACTION_DOWN:
-                    mEventRawX = event.getRawX();
-                    mEventRawY = event.getRawY();
+                    origin.x = event.getRawX();
+                    origin.y = event.getRawY();
+
+                    center.x = StickItem.this.getX() + ((View)StickItem.this.getParent()).getX() + (float)StickItem.this.getWidth()/2;
+
+                    float statusBarHeight = 0f;
+                    int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+                    if (resourceId > 0) {
+                        statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+                    }
+                    center.y = StickItem.this.getY() + ((View)StickItem.this.getParent()).getY() + statusBarHeight + (float)StickItem.this.getHeight()/2;
+
                     break;
 
                 case MotionEvent.ACTION_MOVE:
+                    double angle_diff = Math.abs(Math.atan2(event.getRawY() - origin.y, event.getRawX() - origin.x) - Math.atan2(origin.y - center.y, origin.x - center.x))*180/Math.PI;
+                    double length1 = getLength(center.x, center.y, origin.x, origin.y);
+                    double length2 = getLength(center.x, center.y, event.getRawX(), event.getRawY());
+                    int minSize = convertDpToPixel(MIN_SIZE_DP, getContext());
+                    if(length2 > length1 && (angle_diff < 25 || Math.abs(angle_diff-180)<25)){
+                        //scale up
+                        double offsetX = Math.abs(event.getRawX() - origin.x);
+                        double offsetY = Math.abs(event.getRawY() - origin.y);
+                        double offset = Math.max(offsetX, offsetY);
+                        offset = Math.round(offset);
+                        StickItem.this.getLayoutParams().width += offset;
+                        StickItem.this.getLayoutParams().height += offset;
+
+                    }else if(length2 < length1
+                            && (angle_diff < 25 || Math.abs(angle_diff-180)<25)
+                            && StickItem.this.getLayoutParams().width > minSize/2
+                            && StickItem.this.getLayoutParams().height > minSize/2) {
+
+                        //scale down
+                        double offsetX = Math.abs(event.getRawX() - origin.x);
+                        double offsetY = Math.abs(event.getRawY() - origin.y);
+                        double offset = Math.max(offsetX, offsetY);
+                        offset = Math.round(offset);
+                        StickItem.this.getLayoutParams().width -= offset;
+                        StickItem.this.getLayoutParams().height -= offset;
+
+                    }
+
+                    double angle = Math.atan2(event.getRawY() - center.y, event.getRawX() - center.x) * 180 / Math.PI;
+                    setRotation((float) angle - 45);
+
+                    origin.x = event.getRawX();
+                    origin.y = event.getRawY();
+
+                    postInvalidate();
+                    requestLayout();
 
                     break;
 
                 case MotionEvent.ACTION_UP:
-
                     break;
 
                 default:
@@ -92,18 +139,18 @@ public abstract class StickItem extends FrameLayout implements View.OnTouchListe
         }else { //===== dragging
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    mEventRawX = event.getRawX();
-                    mEventRawY = event.getRawY();
+                    origin.x = event.getRawX();
+                    origin.y = event.getRawY();
                     break;
 
                 case MotionEvent.ACTION_MOVE:
-                    float offsetX = event.getRawX() - mEventRawX;
-                    float offsetY = event.getRawY() - mEventRawY;
+                    float offsetX = event.getRawX() - origin.x;
+                    float offsetY = event.getRawY() - origin.y;
                     this.setX(this.getX() + offsetX);
                     this.setY(this.getY() + offsetY);
 
-                    mEventRawX = event.getRawX();
-                    mEventRawY = event.getRawY();
+                    origin.x = event.getRawX();
+                    origin.y = event.getRawY();
                     break;
 
                 case MotionEvent.ACTION_UP:
@@ -126,7 +173,9 @@ public abstract class StickItem extends FrameLayout implements View.OnTouchListe
             Logger.d(StickItem.class.getName(), "delete button is clicked");
 
         }else if(v.getTag().equals(BUTTON_FLIP_TAG)){
-
+            View mainView = getMainView();
+            mainView.setRotationY(mainView.getRotationY() == -180f? 0f: -180f);
+            mainView.invalidate();
             Logger.d(StickItem.class.getName(), "flip button is clicked");
         }
     }
@@ -172,6 +221,7 @@ public abstract class StickItem extends FrameLayout implements View.OnTouchListe
         mBtnScale = new ImageView(context);
         mBtnScale.setTag(BUTTON_SCALE_TAG);
         mBtnScale.setImageResource(android.R.drawable.ic_menu_crop);
+        mBtnScale.setOnTouchListener(this);
         LayoutParams btnScaleLayoutParams = new LayoutParams(buttonSize, buttonSize);
         btnScaleLayoutParams.gravity = Gravity.END | Gravity.BOTTOM;
 
@@ -184,6 +234,17 @@ public abstract class StickItem extends FrameLayout implements View.OnTouchListe
     }
 
     protected abstract View getMainView();
+
+    private double getLength(double x1, double y1, double x2, double y2){
+        return Math.sqrt(Math.pow(y2-y1, 2)+Math.pow(x2-x1, 2));
+    }
+
+    private static int convertDpToPixel(float dp, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+        return (int)px;
+    }
 
     //========= inner classes ======================================================================
 
